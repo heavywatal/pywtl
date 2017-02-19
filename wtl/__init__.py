@@ -1,2 +1,3 @@
 def hello():
-    return 'Hello, world!'
+    import getpass
+    print('Hello, ' + getpass.getuser() + '!')
