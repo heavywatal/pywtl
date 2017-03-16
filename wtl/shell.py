@@ -5,7 +5,15 @@
 import concurrent.futures as confu
 import subprocess
 import re
-from multiprocessing import cpu_count
+
+try:
+    import psutil
+
+    def cpu_count():
+        return psutil.cpu_count(logical=False)
+except ImportError:
+    print("Warning: psutil is missing; cpu_count(logical=True)")
+    from os import cpu_count
 
 
 def run(command, dry_run=False):
@@ -36,6 +44,7 @@ def main():
     parser.add_argument('-j', '--jobs', type=int, default=cpu_count())
     parser.add_argument('command', nargs='+')
     args = parser.parse_args()
+    print('cpu_count(): {}'.format(cpu_count()))
     map(args.command, args.jobs, args.dry_run)
 
 
