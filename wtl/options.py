@@ -8,8 +8,7 @@ import re
 
 from os import getpid
 from collections import OrderedDict
-from multiprocessing import cpu_count
-from . import shell
+from .shell import map_async, cpu_count
 
 
 def optionize(key, value):
@@ -72,5 +71,5 @@ def demo():
 if __name__ == '__main__':
     import inspect
     print(inspect.getsource(demo))
-    print('>>> shell.map(demo(), cpu_count(), dry_run=True)')
-    shell.map(demo(), cpu_count(), dry_run=True)
+    print('>>> map_async(demo(), cpu_count(), dry_run=True)')
+    map_async(demo(), cpu_count(), dry_run=True)
