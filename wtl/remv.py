@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-mv with regex
+"""mv with regex
 """
 import os
 import re

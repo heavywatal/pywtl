@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-"""
-Concatenate PDFs
+"""Concatenate PDFs
 """
 from PyPDF2 import PdfFileMerger, PdfFileReader, PdfFileWriter
 
