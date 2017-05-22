@@ -6,7 +6,7 @@
 # If you want Google's container you would reference google/python
 # Read more about containers on our dev center
 # http://devcenter.wercker.com/docs/containers/index.html
-box: python:latest
+box: python:3-slim
 # You can also use services such as databases. Read more on our dev center:
 # http://devcenter.wercker.com/docs/services/index.html
 # services:
@@ -30,10 +30,6 @@ build:
         requirements_file: ""
         packages_list: "flake8"
 
-    # # This pip-install clears the local wheel cache
-    # - pip-install:
-    #     clean_wheel_dir: true
-
     # A custom script step, name value is used in the UI
     # and the code value contains the command that get executed
     - script:
@@ -41,3 +37,8 @@ build:
         code: |
           echo "python version $(python --version) running"
           echo "pip version $(pip --version) running"
+
+    - script:
+        name: run flake8
+        code: |
+          flake8 wtl
