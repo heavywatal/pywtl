@@ -17,7 +17,7 @@ except ImportError:
     from os import cpu_count
 
 
-def run(command, dry_run=False):
+def run(command, dry_run=False, **popenargs):
     if not isinstance(command, str):
         command = ' '.join(command)
     if re.search(r'\brm\b', command):
@@ -31,7 +31,7 @@ def run(command, dry_run=False):
     return jobname, subprocess.run(
         command, shell=True,
         stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT)
+        stderr=subprocess.STDOUT, **popenargs)
 
 
 def map_async(commands, max_workers=cpu_count(),
