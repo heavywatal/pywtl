@@ -11,6 +11,35 @@ from collections import OrderedDict
 from .shell import map_async, cpu_count
 
 
+def sequential(axes: dict):
+    for (key, vals) in axes.items():
+        for value in vals:
+            yield OrderedDict({key: value})
+
+
+def product(axes: dict):
+    for vals in itertools.product(*axes.values()):
+        yield OrderedDict((k, v) for k, v in zip(axes.keys(), vals))
+
+
+def parallel(axes: dict):
+    for vals in zip(*axes.values()):
+        yield OrderedDict((k, v) for k, v in zip(axes.keys(), vals))
+
+
+def cycle(iterable, n=2):
+    lst = list(iterable)
+    for i in range(n):
+        for x in lst:
+            yield x
+
+
+def tandem(iterable, n=2):
+    for x in iterable:
+        for i in range(n):
+            yield x
+
+
 def optionize(key, value):
     if len(key) > 1:
         return '--{}={}'.format(key, value)
@@ -18,20 +47,8 @@ def optionize(key, value):
         return '-{}{}'.format(key, value)
 
 
-def sequential(params, repeat=1):
-    for (key, vals) in params.items():
-        for value in vals:
-            for i in range(repeat):
-                yield optionize(key, value)
-
-
-def product(params, repeat=1):
-    for vals in itertools.product(*params.values()):
-        args = []
-        for (key, value) in zip(params.keys(), vals):
-            args.append(optionize(key, value))
-        for i in range(repeat):
-            yield args
+def make_args(values: dict):
+    return [optionize(k, v) for (k, v) in values.items()]
 
 
 def join(args):
@@ -59,13 +76,14 @@ def now(sep='T', timespec='minutes', remove=r'\W'):
 
 def demo():
     const = ['a.out', '-v']
-    params = OrderedDict()
-    params['D'] = [format(x, '02d') for x in [2, 3]]
-    params['u'] = [format(x, '.2f') for x in [0.01, 0.1]]
+    axes = OrderedDict()
+    axes['D'] = [format(x, '02d') for x in [2, 3]]
+    axes['u'] = [format(x, '.2f') for x in [0.01, 0.1]]
     suffix = '_{}_{}'.format(now(), getpid())
-    for i, x in enumerate(product(params, 2)):
-        label = join(x) + suffix + '_{:02}'.format(i)
-        yield const + x + ['--outdir=' + label]
+    for i, x in enumerate(tandem(product(axes), 2)):
+        args = make_args(x)
+        label = join(args) + suffix + '_{:02}'.format(i)
+        yield const + args + ['--outdir=' + label]
 
 
 if __name__ == '__main__':
