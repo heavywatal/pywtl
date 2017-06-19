@@ -6,6 +6,7 @@ import concurrent.futures as confu
 import subprocess
 import re
 import os
+import warnings
 
 try:
     import psutil
@@ -17,21 +18,24 @@ except ImportError:
     from os import cpu_count
 
 
-def run(command, dry_run=False, **popenargs):
+def run(command, dry_run=False, outdir=None, **popenargs):
+    popenargs.setdefault('shell', True)
+    popenargs.setdefault('stdout', subprocess.PIPE)
+    popenargs.setdefault('stderr', subprocess.STDOUT)
     if not isinstance(command, str):
         command = ' '.join(command)
     if re.search(r'\brm\b', command):
         print(command)
         raise ValueError('rm is not allowed')
-    jobname = re.sub(r'\s+-', '-', command)
-    jobname = re.sub(r'[^\w\-]+', '_', jobname).strip('_')
-    jobname += ".{}".format(os.getpid())
     if dry_run:
         command = '#' + command
-    return jobname, subprocess.run(
-        command, shell=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.STDOUT, **popenargs)
+    elif outdir:
+        outfile = re.sub(r'\s+-', '-', command)
+        outfile = re.sub(r'[^\w\-]+', '_', outfile).strip('_')
+        outfile += ".{}.txt".format(os.getpid())
+        outfile = os.path.join(outdir, outfile)
+        popenargs['stdout'] = open(outfile, 'ab')
+    return subprocess.run(command, **popenargs)
 
 
 def map_async(commands, max_workers=cpu_count(),
@@ -39,18 +43,15 @@ def map_async(commands, max_workers=cpu_count(),
               outdir='.'):
     if outdir:
         assert os.path.exists(outdir)
+    elif not verbose:
+        warnings.warn('stdout/stderr will be ignored')
     with confu.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        fs = [executor.submit(run, cmd, dry_run) for cmd in commands]
+        fs = [executor.submit(run, cmd, dry_run, outdir) for cmd in commands]
         for future in confu.as_completed(fs):
-            jobname, completed = future.result()
+            completed = future.result()
             print([completed.args, completed.returncode])
-            output = completed.stdout
-            if verbose:
-                print(output.decode(), end='')
-            if outdir and output:
-                outfile = os.path.join(outdir, jobname + '.txt')
-                with open(outfile, 'ab') as fout:
-                    fout.write(output)
+            if verbose and completed.stdout:
+                print(completed.stdout.decode(), end='')
 
 
 def main():
