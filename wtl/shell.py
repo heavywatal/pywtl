@@ -35,7 +35,13 @@ def run(command, dry_run=False, outdir=None, **popenargs):
         outfile += ".{}.txt".format(os.getpid())
         outfile = os.path.join(outdir, outfile)
         popenargs['stdout'] = open(outfile, 'ab')
-    return subprocess.run(command, **popenargs)
+    try:
+        return subprocess.run(command, **popenargs)
+    finally:
+        try:
+            popenargs['stdout'].close()
+        except AttributeError:
+            pass
 
 
 def map_async(commands, max_workers=cpu_count(),
