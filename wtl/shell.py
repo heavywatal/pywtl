@@ -48,7 +48,7 @@ def map_async(commands, max_workers=cpu_count(),
               dry_run=False, verbose=False,
               outdir='.'):
     if outdir:
-        assert os.path.exists(outdir)
+        assert os.path.exists(outdir), outdir + ' does not exist'
     elif not verbose:
         warnings.warn('stdout/stderr will be ignored')
     with confu.ThreadPoolExecutor(max_workers=max_workers) as executor:
