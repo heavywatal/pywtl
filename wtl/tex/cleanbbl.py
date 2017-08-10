@@ -34,6 +34,14 @@ def sub_abbrev(string):
     return re.sub(patt, r'\1.', string)
 
 
+def sub_command(string):
+    string = re.sub(r'{\\rm\s*', r'\\textrm{', string)
+    string = re.sub(r'{\\bf\s*', r'\\textbf{', string)
+    string = re.sub(r'{\\it\s*', r'\\textit{', string)
+    string = re.sub(r'{\\em\s*', r'\\textit{', string)
+    return string
+
+
 def main():
     import argparse
     parser = argparse.ArgumentParser()
@@ -43,6 +51,7 @@ def main():
     args.bbl.seek(0)
     content = sub_pagerange(content)
     content = sub_abbrev(content)
+    content = sub_command(content)
     args.bbl.write(content)
     args.bbl.truncate()
 
