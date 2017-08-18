@@ -13,11 +13,22 @@ max_width = 2250
 max_height = 2625
 
 
+def remove_alpha(img, bg_color=(255, 255, 255)):
+    """
+    Alpha composition makes smoother edges than img.convert('RGB')
+    """
+    img_rgb = Image.new('RGB', img.size, bg_color)
+    alpha_layer = img.split()[3]
+    img_rgb.paste(img, mask=alpha_layer)
+    return img_rgb
+
+
 def compress(infile):
     img = Image.open(infile)
+    img = remove_alpha(img)
     print('{infile} [{img.size[0]}x{img.size[1]}]'.format(**locals()))
     (base, ext) = os.path.splitext(infile)
-    outfile = os.path.basename(base) + '.lzw.tiff'
+    outfile = 'Fig_' + os.path.basename(base) + '.lzw.tif'
     img.thumbnail((max_width, max_height), Image.LANCZOS)
     print('\t=> {outfile} [{img.size[0]}x{img.size[1]}]'.format(**locals()))
     img.save(outfile, compression='tiff_lzw', dpi=(300.0, 300.0))
