@@ -28,7 +28,7 @@ def compress(infile):
     img = remove_alpha(img)
     print('{infile} [{img.size[0]}x{img.size[1]}]'.format(**locals()))
     (base, ext) = os.path.splitext(infile)
-    outfile = 'Fig_' + os.path.basename(base) + '.lzw.tif'
+    outfile = os.path.basename(base) + '.tif'
     img.thumbnail((max_width, max_height), Image.LANCZOS)
     print('\t=> {outfile} [{img.size[0]}x{img.size[1]}]'.format(**locals()))
     img.save(outfile, compression='tiff_lzw', dpi=(300.0, 300.0))
