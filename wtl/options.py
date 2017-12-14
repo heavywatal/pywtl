@@ -4,9 +4,9 @@
 """
 import itertools
 import datetime
+import os
 import re
 
-from os import getpid
 from collections import OrderedDict
 from .shell import map_async, cpu_count
 
@@ -79,7 +79,7 @@ def demo():
     axes = OrderedDict()
     axes['D'] = [format(x, '02d') for x in [2, 3]]
     axes['u'] = [format(x, '.2f') for x in [0.01, 0.1]]
-    suffix = '_{}_{}'.format(now(), getpid())
+    suffix = '_{}_{}'.format(now(), os.getpid())
     for i, x in enumerate(tandem(product(axes), 2)):
         args = make_args(x)
         label = join(args) + suffix + '_{:02}'.format(i)
