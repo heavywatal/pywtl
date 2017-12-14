@@ -6,7 +6,9 @@ import requests
 import json
 import os
 import pkgutil
+import socket
 import subprocess
+import sys
 
 
 def decrypt(code):
@@ -34,13 +36,21 @@ def post(text, dry_run=False):
         print(response.text)
 
 
+def report(message=None, dry_run=False):
+    lines = ['@' + socket.gethostname()]
+    lines.append(' '.join(sys.argv))
+    if message:
+        lines.append(message)
+    post('\n'.join(lines), dry_run=dry_run)
+
+
 def main():
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument('-n', '--dry-run', action='store_true')
-    parser.add_argument('text')
+    parser.add_argument('text', nargs='?')
     args = parser.parse_args()
-    post(args.text, dry_run=args.dry_run)
+    report(args.text, dry_run=args.dry_run)
 
 
 if __name__ == '__main__':
