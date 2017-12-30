@@ -65,7 +65,7 @@ def today(remove=r'\W'):
         return iso
 
 
-def now(sep='T', timespec='minutes', remove=r'\W'):
+def now(sep='T', timespec='seconds', remove=r'\W'):
     dt = datetime.datetime.now()
     iso = dt.isoformat(sep, timespec)
     if remove:
