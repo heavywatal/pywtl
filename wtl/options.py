@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 """For running a program in various parameters
 """
+import argparse
 import itertools
 import datetime
 import os
@@ -84,6 +85,14 @@ def demo():
         args = make_args(x)
         label = join(args) + suffix + '_{:02}'.format(i)
         yield const + args + ['--outdir=' + label]
+
+
+def ArgumentParser(**kwargs):
+    parser = argparse.ArgumentParser(**kwargs)
+    parser.add_argument('-n', '--dry-run', action='store_true')
+    parser.add_argument('-j', '--jobs', type=int, default=cpu_count())
+    parser.add_argument('-p', '--parallel', type=int, default=1)
+    return parser
 
 
 if __name__ == '__main__':
