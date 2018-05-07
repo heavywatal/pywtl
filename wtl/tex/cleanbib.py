@@ -7,8 +7,9 @@ import sys
 
 
 def rm_comment(string):
-    mobj = re.search('@comment{.+?}\s*}(.+?)@comment{', string, re.DOTALL)
-    return mobj.group(1)
+    pattern = '@comment{.+?}\s*}\s*(.+?)\s*@comment{'
+    mobj = re.search(pattern, string, re.DOTALL)
+    return mobj.group(1) + '\n'
 
 
 def rm_annote(string):
