@@ -92,6 +92,9 @@ def ArgumentParser(**kwargs):
     parser.add_argument('-n', '--dry-run', action='store_true')
     parser.add_argument('-j', '--jobs', type=int, default=cpu_count())
     parser.add_argument('-p', '--parallel', type=int, default=1)
+    parser.add_argument('-r', '--repeat', type=int, default=1)
+    parser.add_argument('--skip', type=int, default=0)
+    parser.add_argument('-o', '--outdir', default='.stdout')
     return parser
 
 
