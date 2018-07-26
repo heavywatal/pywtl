@@ -29,10 +29,8 @@ def parallel(axes: dict):
 
 
 def cycle(iterable, n=2):
-    lst = list(iterable)
-    for i in range(n):
-        for x in lst:
-            yield x
+    rep = itertools.repeat(tuple(iterable), n)
+    return itertools.chain.from_iterable(rep)
 
 
 def tandem(iterable, n=2):
