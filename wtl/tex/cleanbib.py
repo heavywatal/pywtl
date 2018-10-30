@@ -7,14 +7,14 @@ import sys
 
 
 def rm_comment(string):
-    pattern = '@comment{.+?}\s*}\s*(.+?)\s*@comment{'
+    pattern = r'@comment{.+?}\s*}\s*(.+?)\s*@comment{'
     mobj = re.search(pattern, string, re.DOTALL)
     return mobj.group(1) + '\n'
 
 
 def rm_annote(string):
     '''Be careful when using {braces} or other special characters'''
-    return re.sub(',\s+Annote = {.*?}(?=[,}])', '', string, flags=re.DOTALL)
+    return re.sub(r',\s+Annote = {.*?}(?=[,}])', '', string, flags=re.DOTALL)
 
 
 def rename(string):
