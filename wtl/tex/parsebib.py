@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""Extract entries from bib
+"""Parse bib file
 """
 import re
 import sys
@@ -10,28 +8,29 @@ required_keys = ['author', 'title', 'journal',
                  'publisher', 'address', 'editor']
 
 
-def bib_entries(file):
-    entries = file.read().strip().split('\n\n')
-    return [x + '\n\n' for x in entries if re.match('@article|@book', x)]
+def read_entries(file):
+    patt = re.compile(r'@(?!comment).+?}$', re.DOTALL | re.MULTILINE)
+    return [BibEntry(m.group(0)) for m in patt.finditer(file.read())]
 
 
 class BibEntry:
     def __init__(self, string):
-        mobj = re.search(r'@(?:article|book)\s*{\s*[^,\s]+', string)
-        self._open = mobj.group(0)
-        self._key = self._open.split('{')[1]
-        self._entry = {}
-        for mobj in re.finditer(r'(\S+)\s*=\s*({.*?})(?=[,}]\n)', string):
+        (head, body) = string.split(',', 1)
+        (self.type, self.key) = head.split('{', 1)
+        self.tags = {}
+        patt = r'(\S+)\s*=\s*({.*?})(?=[,}]$)'
+        patt = re.compile(patt, re.DOTALL | re.MULTILINE)
+        for mobj in patt.finditer(body):
             key = mobj.group(1).lower()
             if key in required_keys:
                 value = mobj.group(2)
                 if key == 'pages':
                     value = sub_pagerange(value)
-                self._entry[key] = value
+                self.tags[key] = value
 
     def __str__(self):
-        s = self._open + ',\n\t'
-        s += ',\n\t'.join([' = '.join([k, v]) for k, v in self._entry.items()])
+        s = self.type + '{' + self.key + ',\n\t'
+        s += ',\n\t'.join([' = '.join([k, v]) for k, v in self.tags.items()])
         s += '}\n\n'
         return s
 
@@ -48,15 +47,19 @@ def sub_pagerange(string):
 def main():
     import argparse
     parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--number', action='store_true')
+    parser.add_argument('-k', '--keys', action='store_true')
     parser.add_argument('-o', '--outfile',
                         type=argparse.FileType('w'), default=sys.stdout)
     parser.add_argument('bib', type=argparse.FileType('r'))
     args = parser.parse_args()
-    entries = bib_entries(args.bib)
-    print(len(entries), file=sys.stderr)
-    entries = [BibEntry(s) for s in entries]
-    print([x._key for x in entries], file=sys.stderr)
-    args.outfile.writelines([str(x) for x in entries])
+    entries = read_entries(args.bib)
+    if args.number:
+        print(len(entries))
+    elif args.keys:
+        print([x._key for x in entries])
+    else:
+        args.outfile.writelines([str(x) for x in entries])
 
 
 if __name__ == '__main__':
