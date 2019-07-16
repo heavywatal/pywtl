@@ -24,6 +24,8 @@ class BibEntry:
             key = mobj.group(1).lower()
             if key in required_keys:
                 value = mobj.group(2)
+                if key == 'author':
+                    value = sanitize_author(value)
                 if key == 'pages':
                     value = sub_pagerange(value)
                 self.tags[key] = value
@@ -33,6 +35,10 @@ class BibEntry:
         s += ',\n\t'.join([' = '.join([k, v]) for k, v in self.tags.items()])
         s += '}\n\n'
         return s
+
+
+def sanitize_author(string):
+    return re.sub(r'(?<=[^^]){(.+?)}(?=[^$])', r'"\1"', string)
 
 
 def sub_pagerange(string):
