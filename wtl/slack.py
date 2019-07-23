@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """Post messages to Slack with Incoming WebHooks
 """
 import requests

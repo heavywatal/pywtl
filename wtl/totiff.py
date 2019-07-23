@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """
 Convert image to TIFF with LZW algorithm (for PLOS manuscript)
 http://journals.plos.org/ploscompbiol/s/figures
