@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Concatenate PDFs
 """
 from PyPDF2 import PdfFileMerger, PdfFileReader, PdfFileWriter

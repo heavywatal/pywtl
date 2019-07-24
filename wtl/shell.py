@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Concurrent shell execution
 """
 import concurrent.futures as confu

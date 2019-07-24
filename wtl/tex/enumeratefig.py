@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Extract \\includegraphics{...} from TeX file and rename them (for PLOS)
 http://journals.plos.org/ploscompbiol/s/figures

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """For running a program in various parameters
 """
 import argparse

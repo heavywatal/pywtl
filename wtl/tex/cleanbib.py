@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Remove meta data of Bibdesk
 """
 import re

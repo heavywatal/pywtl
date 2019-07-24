@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Post messages to Slack with Incoming WebHooks
 """
 import requests

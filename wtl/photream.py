@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 copy images from Photo Stream to one place
 """

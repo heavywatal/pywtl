@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """
 Convert image to TIFF with LZW algorithm (for PLOS manuscript)
 http://journals.plos.org/ploscompbiol/s/figures

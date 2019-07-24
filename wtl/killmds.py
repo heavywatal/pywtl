@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 Suppress spotlight daemons for laptop battery
 """

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Send pings and commands to remote hosts
 """
 import sys

@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """Extract entries from bib
 """
 import re

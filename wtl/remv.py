@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 """mv with regex
 """
 import os
