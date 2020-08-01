@@ -1,5 +1,3 @@
 # wtl: Personal Python package
 
-of me, by me, for me
-
-[![Build Status](https://travis-ci.org/heavywatal/pywtl.svg?branch=master)](https://travis-ci.org/heavywatal/pywtl)
+[![Build status](https://github.com/heavywatal/pywtl/workflows/flake8/badge.svg)](https://github.com/heavywatal/pywtl/actions)
