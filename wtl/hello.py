@@ -6,13 +6,13 @@ import sys
 
 
 def main():
-    print(f'Hello, {getpass.getuser()}!')
-    print(f'{__file__=}')
-    print(f'{sys.executable=}')
-    print(f'{site.USER_BASE=}')
-    print(f'{site.USER_SITE=}')
-    print(f'{site.getsitepackages()=}')
+    print(f"Hello, {getpass.getuser()}!")
+    print(f"{__file__=}")
+    print(f"{sys.executable=}")
+    print(f"{site.USER_BASE=}")
+    print(f"{site.USER_SITE=}")
+    print(f"{site.getsitepackages()=}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

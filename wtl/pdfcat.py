@@ -7,30 +7,31 @@ def cat(infiles, outfile):
     merger = PdfFileMerger()
     for infile in infiles:
         print(infile)
-        with open(infile, 'rb') as fin:
+        with open(infile, "rb") as fin:
             merger.append(PdfFileReader(fin))
-    print('Writing ' + outfile)
+    print("Writing " + outfile)
     merger.write(outfile)
 
 
 def merge(labelfile, picturefile, outfile):
-    picpage = PdfFileReader(open(picturefile, 'rb')).getPage(0)
-    reader = PdfFileReader(open(labelfile, 'rb'))
+    picpage = PdfFileReader(open(picturefile, "rb")).getPage(0)
+    reader = PdfFileReader(open(labelfile, "rb"))
     writer = PdfFileWriter()
     for labpage in reader.pages:
         writer.addPage(labpage)
         writer.addPage(picpage)
-    print('Writing ' + outfile)
-    with open(outfile, 'wb') as fout:
+    print("Writing " + outfile)
+    with open(outfile, "wb") as fout:
         writer.write(fout)
 
 
 def main():
     import argparse
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('-o', '--outfile', default='_merged.pdf')
-    parser.add_argument('-p', '--postcard')
-    parser.add_argument('infile', nargs='+')
+    parser.add_argument("-o", "--outfile", default="_merged.pdf")
+    parser.add_argument("-p", "--postcard")
+    parser.add_argument("infile", nargs="+")
     args = parser.parse_args()
 
     if args.postcard:
@@ -39,5 +40,5 @@ def main():
         cat(args.infile, args.outfile)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
