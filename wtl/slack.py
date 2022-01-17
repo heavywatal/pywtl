@@ -43,7 +43,7 @@ def webhook_url():
 
 
 def sslenc(content: str, password: str, decrypt: bool = False):
-    cmd = ["openssl", "enc", "-aes256", "-a", "-A"]
+    cmd = ["openssl", "enc", "-aes256", "-md", "md5", "-a", "-A"]
     if decrypt:
         cmd.append("-d")
     cmd.extend(["-pass", f"pass:{password}"])
