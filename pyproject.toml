@@ -8,13 +8,15 @@ authors = [
   {name = "Watal M. Iwasaki", email = "heavywatal@gmail.com"}
 ]
 license = {file = "LICENSE"}
-description = "wtl: Personal Python package"
 readme = "README.md"
 requires-python = ">=3.9"
-dynamic = ["version"]
 dependencies = [
   "psutil",
   "requests"
+]
+dynamic = [
+  "description",
+  "version",
 ]
 
 [project.urls]
