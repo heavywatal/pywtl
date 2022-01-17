@@ -13,24 +13,27 @@ ASSETS = os.path.join(APPSUPP, "iLifeAssetManagement/assets")
 PHOTOS = os.path.expanduser("~/Pictures/Photos Library.photoslibrary/Masters")
 
 
-def ls_recursive(topdir=PHOTOS):
+def ls_recursive(topdir: str = PHOTOS):
     patt = re.compile(r"jpg$|png$", re.IGNORECASE)
-    paths = []
-    for (root, dirs, files) in os.walk(topdir):
+    paths: list[str] = []
+    for (root, _, files) in os.walk(topdir):
         for afile in files:
             if patt.search(afile):
                 paths.append(os.path.join(root, afile))
     return sorted(paths, key=os.path.basename)
 
 
-def decode_exif(image):
-    ret = dict()
-    for (tag, value) in image._getexif().items():
-        ret[ExifTags.TAGS.get(tag)] = value
+def decode_exif(image: Image.Image):
+    ret: dict[str, str] = dict()
+    exif: dict[int, str] = image._getexif()
+    for (tag, value) in exif.items():
+        key = ExifTags.TAGS.get(tag)
+        if key:
+            ret[key] = value
     return ret
 
 
-def parse_filename(src):
+def parse_filename(src: str):
     mobj = re.search(r"(pub|sub-shared|watch)/", src)
     if mobj:
         label = mobj.group(1)[0]
@@ -46,11 +49,13 @@ def parse_filename(src):
         if exif_time:
             time_stamp = exif_time.replace(" ", "T")
     time_stamp = time_stamp.replace(":", "-")
-    basename_ = re.search(r"([a-z]?IMG_\S+)$", src).group(1)
+    mobj = re.search(r"([a-z]?IMG_\S+)$", src)
+    assert mobj
+    basename_ = mobj.group(1)
     return "_".join([time_stamp, label + basename_])
 
 
-def transfer(src, dst, delete=False, dry_run=False):
+def transfer(src: str, dst: str, delete: bool = False, dry_run: bool = False):
     func = shutil.move if delete else shutil.copy2
     if os.path.exists(dst):
         # temporal code

@@ -1,28 +1,16 @@
 """Concatenate PDFs
 """
-from PyPDF2 import PdfFileMerger, PdfFileReader, PdfFileWriter
+import subprocess
 
 
-def cat(infiles, outfile):
-    merger = PdfFileMerger()
-    for infile in infiles:
-        print(infile)
-        with open(infile, "rb") as fin:
-            merger.append(PdfFileReader(fin))
-    print("Writing " + outfile)
-    merger.write(outfile)
-
-
-def merge(labelfile, picturefile, outfile):
-    picpage = PdfFileReader(open(picturefile, "rb")).getPage(0)
-    reader = PdfFileReader(open(labelfile, "rb"))
-    writer = PdfFileWriter()
-    for labpage in reader.pages:
-        writer.addPage(labpage)
-        writer.addPage(picpage)
-    print("Writing " + outfile)
-    with open(outfile, "wb") as fout:
-        writer.write(fout)
+def gs_pdfwrite(infiles: list[str], outputfile: str, quiet: bool = False):
+    args = ["gs", "-dNOPAUSE", "-dBATCH", "-sDEVICE=pdfwrite"]
+    if quiet:
+        args.append("-q")
+    args.append(f"-sOutputFile={outputfile}")
+    args.extend(infiles)
+    print(" ".join(args))
+    subprocess.run(args)
 
 
 def main():
@@ -30,14 +18,10 @@ def main():
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-o", "--outfile", default="_merged.pdf")
-    parser.add_argument("-p", "--postcard")
-    parser.add_argument("infile", nargs="+")
+    parser.add_argument("-v", "--verbose", action="store_true")
+    parser.add_argument("infiles", nargs="+")
     args = parser.parse_args()
-
-    if args.postcard:
-        merge(args.infile[0], args.postcard, args.outfile)
-    else:
-        cat(args.infile, args.outfile)
+    gs_pdfwrite(args.infiles, args.outfile, not args.verbose)
 
 
 if __name__ == "__main__":

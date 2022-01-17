@@ -4,7 +4,7 @@ import os
 import re
 
 
-def sub(pattern, repl, dry_run=False):
+def sub(pattern: str, repl: str, dry_run: bool = False):
     rex = re.compile(pattern)
     for current in os.listdir("."):
         if rex.search(current):

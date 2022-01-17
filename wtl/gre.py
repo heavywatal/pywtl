@@ -2,9 +2,16 @@
 """
 import re
 import sys
+from typing import TextIO, Union
 
 
-def grep(pattern, infile, group, line_number, invert_match):
+def grep(
+    pattern: str,
+    infile: TextIO,
+    group: Union[int, str],
+    line_number: bool,
+    invert_match: bool,
+):
     rex = re.compile(pattern)
     for i, line in enumerate(infile):
         mobj = rex.search(line)
@@ -23,9 +30,9 @@ def grep(pattern, infile, group, line_number, invert_match):
             print(line, end="")
 
 
-def try_int(value):
+def try_int(value: str) -> Union[int, str]:
     try:
-        value = int(value)
+        return int(value)
     except ValueError:
         pass
     return value

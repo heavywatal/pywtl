@@ -2,6 +2,7 @@
 """
 import re
 import sys
+from typing import Match, TextIO
 
 required_keys = [
     "author",
@@ -17,16 +18,16 @@ required_keys = [
 ]
 
 
-def read_entries(file):
+def read_entries(file: TextIO):
     patt = re.compile(r"@(?!comment).+?}$", re.DOTALL | re.MULTILINE)
     return [BibEntry(m.group(0)) for m in patt.finditer(file.read())]
 
 
 class BibEntry:
-    def __init__(self, string):
+    def __init__(self, string: str):
         (head, body) = string.split(",", 1)
         (self.type, self.key) = head.split("{", 1)
-        self.tags = {}
+        self.tags: dict[str, str] = {}
         patt = r"(\S+)\s*=\s*({.*?})(?=[,}]$)"
         patt = re.compile(patt, re.DOTALL | re.MULTILINE)
         for mobj in patt.finditer(body):
@@ -46,12 +47,12 @@ class BibEntry:
         return s
 
 
-def sanitize_author(string):
+def sanitize_author(string: str):
     return re.sub(r"(?<=[^^]){(.+?)}(?=[^$])", r'"\1"', string)
 
 
-def sub_pagerange(string):
-    def repl(mobj):
+def sub_pagerange(string: str):
+    def repl(mobj: Match[str]):
         (start, end) = mobj.groups()
         if int(start) > int(end):
             end = start[: -len(end)] + end
@@ -75,7 +76,7 @@ def main():
     if args.number:
         print(len(entries))
     elif args.keys:
-        print([x._key for x in entries])
+        print([x.key for x in entries])
     else:
         args.outfile.writelines([str(x) for x in entries])
 

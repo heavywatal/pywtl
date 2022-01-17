@@ -11,7 +11,7 @@ max_width = 2250
 max_height = 2625
 
 
-def remove_alpha(img, bg_color=(255, 255, 255)):
+def remove_alpha(img: Image.Image, bg_color: tuple[int, int, int] = (255, 255, 255)):
     """
     Alpha composition makes smoother edges than img.convert('RGB')
     """
@@ -21,11 +21,11 @@ def remove_alpha(img, bg_color=(255, 255, 255)):
     return img_rgb
 
 
-def compress(infile):
+def compress(infile: str):
     img = Image.open(infile)
     img = remove_alpha(img)
     print("{infile} [{img.size[0]}x{img.size[1]}]".format(**locals()))
-    (base, ext) = os.path.splitext(infile)
+    (base, _) = os.path.splitext(infile)
     outfile = os.path.basename(base) + ".tif"
     img.thumbnail((max_width, max_height), Image.LANCZOS)
     print("\t=> {outfile} [{img.size[0]}x{img.size[1]}]".format(**locals()))

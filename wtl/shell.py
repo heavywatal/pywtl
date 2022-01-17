@@ -5,6 +5,7 @@ import subprocess
 import re
 import os
 import warnings
+from typing import Any, Iterable, Optional, Union
 
 try:
     import psutil
@@ -17,7 +18,12 @@ except ImportError:
     from os import cpu_count
 
 
-def run(command, dry_run=False, outdir=None, **popenargs):
+def run(
+    command: Union[str, list[str]],
+    dry_run: bool = False,
+    outdir: str = "",
+    **popenargs: Any
+):
     popenargs.setdefault("shell", True)
     popenargs.setdefault("stdout", subprocess.PIPE)
     popenargs.setdefault("stderr", subprocess.STDOUT)
@@ -35,7 +41,7 @@ def run(command, dry_run=False, outdir=None, **popenargs):
         outfile = os.path.join(outdir, outfile)
         popenargs["stdout"] = open(outfile, "ab")
     try:
-        return subprocess.run(command, **popenargs)
+        return subprocess.run(command, text=True, **popenargs)
     finally:
         try:
             popenargs["stdout"].close()
@@ -44,7 +50,11 @@ def run(command, dry_run=False, outdir=None, **popenargs):
 
 
 def map_async(
-    commands, max_workers=cpu_count(), dry_run=False, verbose=False, outdir="."
+    commands: Iterable[list[str]],
+    max_workers: Optional[int] = cpu_count(),
+    dry_run: bool = False,
+    verbose: bool = False,
+    outdir: str = ".",
 ):
     if outdir:
         assert os.path.exists(outdir), outdir + " does not exist"
@@ -56,7 +66,7 @@ def map_async(
             completed = future.result()
             print([completed.args, completed.returncode])
             if verbose and completed.stdout:
-                print(completed.stdout.decode(), end="")
+                print(completed.stdout, end="")
 
 
 def main():

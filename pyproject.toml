@@ -29,3 +29,6 @@ Source = "https://github.com/heavywatal/pywtl"
 "remote.py" = "wtl.remote:main"
 "skel.py" = "wtl.skel:main"
 "sub.py" = "wtl.sub:main"
+
+[tool.pyright]
+typeCheckingMode = "strict"

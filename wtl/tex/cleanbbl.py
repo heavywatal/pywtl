@@ -1,6 +1,7 @@
 """
 """
 import re
+from typing import Match
 
 abbrevs = [
     "Acad",
@@ -64,8 +65,8 @@ abbrevs = [
 ]
 
 
-def sub_pagerange(string):
-    def repl(mobj):
+def sub_pagerange(string: str):
+    def repl(mobj: Match[str]):
         (start, end) = mobj.groups()
         if int(start) > int(end):
             end = start[: -len(end)] + end
@@ -76,13 +77,13 @@ def sub_pagerange(string):
     return re.sub(r"(\d+)--(\d+)", repl, string)
 
 
-def sub_abbrev(string):
+def sub_abbrev(string: str):
     string = re.sub(r"\bU\s+S\s+A\b", "USA", string)
     patt = "(" + "|".join(abbrevs) + r")(?=\s)"
     return re.sub(patt, r"\1.", string)
 
 
-def sub_command(string):
+def sub_command(string: str):
     string = re.sub(r"{\\rm\s*", r"\\textrm{", string)
     string = re.sub(r"{\\bf\s*", r"\\textbf{", string)
     string = re.sub(r"{\\it\s*", r"\\textit{", string)

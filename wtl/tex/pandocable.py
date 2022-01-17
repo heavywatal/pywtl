@@ -3,24 +3,25 @@
 import pathlib
 import pprint
 import re
+from typing import Match
 from . import aux
 
 
-def resolve_ref(content, labelmap):
-    def repl(mobj):
+def resolve_ref(content: str, labelmap: dict[str, str]):
+    def repl(mobj: Match[str]):
         return labelmap[mobj.group(1)]
 
     return re.sub(r"\\ref{([^}]+)}", repl, content)
 
 
-def figure_table(content, labelmap):
+def figure_table(content: str, labelmap: dict[str, str]):
     """
     - Remove asterisks from {table*} and {figure*}
     - Add labels to captions
     """
     content = re.sub(r"{(table|figure)\*}", r"{\1}", content)
 
-    def repl(mobj):
+    def repl(mobj: Match[str]):
         type = classify_label(mobj.group(2))
         num = labelmap[mobj.group(2)]
         return f"caption{{\\textbf{{{type} {num}}}. {mobj.group(1)}"

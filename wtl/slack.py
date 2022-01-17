@@ -9,15 +9,16 @@ import subprocess
 import sys
 
 
-def decrypt(code):
+def decrypt(code: bytes):
     inkey = os.path.expanduser("~/.ssh/id_rsa")
     cmd = ["openssl", "rsautl", "-decrypt", "-inkey", inkey]
     process = subprocess.run(cmd, input=code, stdout=subprocess.PIPE)
     return process.stdout.decode()
 
 
-def post(text, dry_run=False):
+def post(text: str, dry_run: bool = False):
     encrypted = pkgutil.get_data("wtl", "slack_webhook_url")
+    assert encrypted
     webhook_url = decrypt(encrypted)
     data = {
         "username": "pywtl",
@@ -34,7 +35,7 @@ def post(text, dry_run=False):
         print(response.text)
 
 
-def report(message=None, dry_run=False):
+def report(message: str = "", dry_run: bool = False):
     lines = ["@" + socket.gethostname()]
     lines.append(" ".join(sys.argv))
     if message:

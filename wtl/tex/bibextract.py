@@ -2,9 +2,10 @@
 """
 import re
 import sys
+from typing import TextIO
 
 
-def bib_entries(file, keys=[]):
+def bib_entries(file: TextIO, keys: list[str] = []):
     entries = file.read().strip().split("\n\n")
     if keys:
         pattern = "@(?:[Aa]rticle|[Bb]ook){(" + "|".join(keys) + "),"
@@ -13,7 +14,7 @@ def bib_entries(file, keys=[]):
         return [x + "\n\n" for x in entries]
 
 
-def bbl_keys(file):
+def bbl_keys(file: TextIO):
     content = file.read()
     return re.findall(r"(?<=\\bibitem\[[^\]]+?\]){([^}]+?)}", content, re.S)
 

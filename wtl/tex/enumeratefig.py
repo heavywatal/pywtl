@@ -8,7 +8,7 @@ import re
 import shutil
 
 
-def finditer(text):
+def finditer(text: str):
     pattern = r"^.*(?<!%).*\\includegraphics.*?{(\S+?)}"
     for mobj in re.finditer(pattern, text, re.M):
         yield mobj.group(1)
@@ -29,7 +29,7 @@ def main():
 
     text = args.infile.read()
     for i, infile in enumerate(finditer(text), 1):
-        (base, ext) = os.path.splitext(infile)
+        (_, ext) = os.path.splitext(infile)
         if i <= args.main:
             outfile = "Fig{}{}".format(i, ext)
         else:

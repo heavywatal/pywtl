@@ -4,18 +4,19 @@ import re
 import sys
 
 
-def rm_comment(string):
-    pattern = r"@comment{.+?}\s*}\s*(.+?)\s*@comment{"
-    mobj = re.search(pattern, string, re.DOTALL)
-    return mobj.group(1) + "\n"
+def rm_comment(string: str):
+    pattern = r"@comment{.+?}\s*$"
+    string = re.sub(pattern, "", string, flags=re.DOTALL | re.MULTILINE)
+    string = re.sub("^%%.+?$", "", string, flags=re.MULTILINE)
+    return string.lstrip()
 
 
-def rm_annote(string):
+def rm_annote(string: str):
     """Be careful when using {braces} or other special characters"""
     return re.sub(r",\s+Annote = {.*?}(?=[,}])", "", string, flags=re.DOTALL)
 
 
-def rename(string):
+def rename(string: str):
     patt = "(Doi|Isbn|Issn|Month)( = )"
     return re.sub(patt, r"\1-x\2", string, flags=re.DOTALL)
 

@@ -4,7 +4,7 @@ import sys
 from .shell import map_async, cpu_count
 
 
-def ping(host):
+def ping(host: str):
     if sys.platform.startswith("darwin"):
         waitopt = "t"
     else:
@@ -12,7 +12,7 @@ def ping(host):
     return ["ping", "-c1", "-{}2".format(waitopt), host]
 
 
-def ssh(host, command=None):
+def ssh(host: str, command: str = ""):
     command = command or "date"
     return ["ssh", host, command]
 
@@ -32,7 +32,7 @@ def main():
     else:
         commands = [ping(x) for x in args.host]
     map_async(
-        commands, args.jobs, dry_run=args.dry_run, verbose=args.verbose, outdir=None
+        commands, args.jobs, dry_run=args.dry_run, verbose=args.verbose, outdir=""
     )
 
 
