@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """
 """
+import argparse
+import logging
 import sys
+
+_log = logging.getLogger(__name__)
 
 
 def main():
-    import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument("-v", "--verbose", action="store_true")
     parser.add_argument("-n", "--dry-run", action="store_true")
