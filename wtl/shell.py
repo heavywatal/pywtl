@@ -22,7 +22,7 @@ def run(
     command: Union[str, list[str]],
     dry_run: bool = False,
     outdir: str = "",
-    **popenargs: Any
+    **popenargs: Any,
 ):
     popenargs.setdefault("shell", True)
     popenargs.setdefault("stdout", subprocess.PIPE)

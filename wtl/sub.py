@@ -21,7 +21,7 @@ def sub(
                 product: list[str] = []
                 subn_lines: list[str] = []
                 subn_sum = 0
-                for (i, line) in enumerate(fio.readlines()):
+                for i, line in enumerate(fio.readlines()):
                     (subn_line, n) = rex.subn(repl, line)
                     product.append(subn_line)
                     if n > 0:

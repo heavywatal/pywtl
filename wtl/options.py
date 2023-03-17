@@ -13,7 +13,7 @@ from .shell import map_async, cpu_count
 
 
 def sequential(axes: dict[str, str]):
-    for (key, vals) in axes.items():
+    for key, vals in axes.items():
         for value in vals:
             yield OrderedDict({key: value})
 

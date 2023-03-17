@@ -16,7 +16,7 @@ PHOTOS = os.path.expanduser("~/Pictures/Photos Library.photoslibrary/Masters")
 def ls_recursive(topdir: str = PHOTOS):
     patt = re.compile(r"jpg$|png$", re.IGNORECASE)
     paths: list[str] = []
-    for (root, _, files) in os.walk(topdir):
+    for root, _, files in os.walk(topdir):
         for afile in files:
             if patt.search(afile):
                 paths.append(os.path.join(root, afile))
@@ -26,7 +26,7 @@ def ls_recursive(topdir: str = PHOTOS):
 def decode_exif(image: Image.Image):
     ret: dict[str, str] = dict()
     exif: dict[int, str] = image._getexif()
-    for (tag, value) in exif.items():
+    for tag, value in exif.items():
         key = ExifTags.TAGS.get(tag)
         if key:
             ret[key] = value
