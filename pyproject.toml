@@ -4,19 +4,20 @@ build-backend = "flit_core.buildapi"
 
 [project]
 name = "wtl"
-authors = [
-  {name = "Watal M. Iwasaki", email = "heavywatal@gmail.com"}
-]
+authors = [{name = "Watal M. Iwasaki", email = "heavywatal@gmail.com"}]
 license = {file = "LICENSE"}
 readme = "README.md"
-requires-python = ">=3.9"
+dynamic = ["description", "version"]
+requires-python = ">=3.11"
 dependencies = [
   "psutil",
   "requests"
 ]
-dynamic = [
-  "description",
-  "version",
+
+[project.optional-dependencies]
+dev = [
+  "black",
+  "pyproject-flake8",
 ]
 
 [project.urls]
@@ -36,3 +37,6 @@ Source = "https://github.com/heavywatal/pywtl"
 
 [tool.pyright]
 typeCheckingMode = "strict"
+
+[tool.flake8]
+max-line-length = 88
