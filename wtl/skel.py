@@ -3,23 +3,27 @@
 """
 import argparse
 import logging
-import sys
+from pathlib import Path
+
+from wtl import cli
 
 _log = logging.getLogger(__name__)
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("-n", "--dry-run", action="store_true")
-    parser.add_argument(
-        "outfile", nargs="?", type=argparse.FileType("w"), default=sys.stdout
-    )
-    parser.add_argument(
-        "infile", nargs="?", type=argparse.FileType("r"), default=open(__file__, "r")
-    )
+    parser = cli.ArgumentParser()
+    parser.add_argument("-i", "--infile", type=Path, default=__file__)
+    parser.add_argument("outfile", nargs="?", type=argparse.FileType("w"), default="-")
     args = parser.parse_args()
-    args.outfile.write(args.infile.read())
+    fun(args.infile)
+    with open(args.infile) as fin:
+        args.outfile.write(fin.read())
+
+
+def fun(infile: Path):
+    outfile = infile.with_suffix(".suffix")
+    _log.debug(f"{infile = }")
+    _log.info(f"{outfile = }")
 
 
 if __name__ == "__main__":
