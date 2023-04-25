@@ -1,6 +1,7 @@
 """For running a program in various parameters
 """
 import datetime
+import inspect
 import itertools
 import os
 import re
@@ -96,7 +97,6 @@ def ArgumentParser(**kwargs: Any):
 
 
 if __name__ == "__main__":
-    import inspect
     parser = cli.ArgumentParser()
     args = parser.parse_args()
     print(inspect.getsource(demo))
