@@ -24,11 +24,11 @@ def remove_alpha(img: Image.Image, bg_color: tuple[int, int, int] = (255, 255, 2
 def compress(infile: str):
     img = Image.open(infile)
     img = remove_alpha(img)
-    print("{infile} [{img.size[0]}x{img.size[1]}]".format(**locals()))
+    print(f"{infile} [{img.size[0]}x{img.size[1]}]")
     (base, _) = os.path.splitext(infile)
     outfile = os.path.basename(base) + ".tif"
     img.thumbnail((max_width, max_height), Image.LANCZOS)
-    print("\t=> {outfile} [{img.size[0]}x{img.size[1]}]".format(**locals()))
+    print(f"\t=> {outfile} [{img.size[0]}x{img.size[1]}]")
     img.save(outfile, compression="tiff_lzw", dpi=(300.0, 300.0))
     # only float values for dpi
     # https://github.com/python-pillow/Pillow/issues/1765

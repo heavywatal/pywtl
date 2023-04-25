@@ -1,15 +1,15 @@
 """For running a program in various parameters
 """
-import argparse
-import itertools
 import datetime
+import itertools
 import os
 import re
-
 from collections import OrderedDict
 from collections.abc import Iterable
 from typing import Any
-from .shell import map_async, cpu_count
+
+from . import cli
+from .shell import cpu_count, map_async
 
 
 def sequential(axes: dict[str, str]):
@@ -41,9 +41,9 @@ def tandem(iterable: Iterable[dict[str, str]], n: int = 2):
 
 def optionize(key: str, value: Any):
     if len(key) > 1:
-        return "--{}={}".format(key, value)
+        return f"--{key}={value}"
     else:
-        return "-{}{}".format(key, value)
+        return f"-{key}{value}"
 
 
 def make_args(values: dict[str, str]):
@@ -76,18 +76,17 @@ def now(sep: str = "T", timespec: str = "seconds", remove: str = r"\W"):
 def demo():
     const = ["a.out", "-v"]
     axes: dict[str, list[str]] = OrderedDict()
-    axes["D"] = [format(x, "02d") for x in [2, 3]]
-    axes["u"] = [format(x, ".2f") for x in [0.01, 0.1]]
-    suffix = "_{}_{}".format(now(), os.getpid())
+    axes["D"] = [f"{x:02}" for x in [2, 3]]
+    axes["u"] = [f"{x:.2f}" for x in [0.01, 0.1]]
+    suffix = f"_{now()}_{os.getpid()}"
     for i, x in enumerate(tandem(product(axes), 2)):
         args = make_args(x)
-        label = join(args) + suffix + "_{:02}".format(i)
+        label = join(args) + suffix + f"_{i:02}"
         yield const + args + ["--outdir=" + label]
 
 
 def ArgumentParser(**kwargs: Any):
-    parser = argparse.ArgumentParser(**kwargs)
-    parser.add_argument("-n", "--dry-run", action="store_true")
+    parser = cli.ArgumentParser(**kwargs)
     parser.add_argument("-j", "--jobs", type=int, default=cpu_count())
     parser.add_argument("-p", "--parallel", type=int, default=1)
     parser.add_argument("-r", "--repeat", type=int, default=1)
@@ -98,7 +97,8 @@ def ArgumentParser(**kwargs: Any):
 
 if __name__ == "__main__":
     import inspect
-
+    parser = cli.ArgumentParser()
+    args = parser.parse_args()
     print(inspect.getsource(demo))
-    print(">>> map_async(demo(), cpu_count(), dry_run=True)")
-    map_async(demo(), cpu_count(), dry_run=True)
+    print(">>> map_async(demo(), cpu_count())")
+    map_async(demo(), cpu_count())

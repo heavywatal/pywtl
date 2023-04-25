@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """
 """
-import argparse
 import logging
 from pathlib import Path
-from .shell import map_async, cpu_count
+
+from . import cli
+from .shell import cpu_count, map_async
 
 _log = logging.getLogger(__name__)
 
@@ -29,10 +30,8 @@ def cwebp(infile: Path, lossless: bool = True):
 
 
 def main():
-    parser = argparse.ArgumentParser()
+    parser = cli.ArgumentParser()
     parser.add_argument("-j", "--jobs", type=int, default=cpu_count())
-    parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("-n", "--dry-run", action="store_true")
     parser.add_argument("-q", "--quality", type=int, default=0)
     parser.add_argument("infile", nargs="*", type=Path)
     args = parser.parse_args()
@@ -42,9 +41,7 @@ def main():
             commands.append(magick(infile, quality=args.quality))
         else:
             commands.append(cwebp(infile))
-    map_async(
-        commands, args.jobs, dry_run=args.dry_run, verbose=args.verbose, outdir=""
-    )
+    map_async(commands, args.jobs, outdir="")
 
 
 if __name__ == "__main__":

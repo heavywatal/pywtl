@@ -31,13 +31,13 @@ def main():
     for i, infile in enumerate(finditer(text), 1):
         (_, ext) = os.path.splitext(infile)
         if i <= args.main:
-            outfile = "Fig{}{}".format(i, ext)
+            outfile = f"Fig{i}{ext}"
         else:
-            outfile = "S{}_Fig{}".format(i - args.main, ext)
+            outfile = f"S{i - args.main}_Fig{ext}"
         ipath = os.path.join(args.indir, infile)
         opath = os.path.join(args.outdir, outfile)
         if args.dry_run:
-            print('shutil.copy2("{}", "{}")'.format(ipath, opath))
+            print(f'shutil.copy2("{ipath}", "{opath}")')
         else:
             shutil.copy2(ipath, opath)
 

@@ -70,7 +70,7 @@ def sub_pagerange(string: str):
         (start, end) = mobj.groups()
         if int(start) > int(end):
             end = start[: -len(end)] + end
-            return "{}--{}".format(start, end)
+            return f"{start}--{end}"
         else:
             return mobj.group()
 
