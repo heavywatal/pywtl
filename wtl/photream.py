@@ -1,12 +1,12 @@
 """
 copy images from Photo Stream to one place
 """
+import datetime
 import os
 import re
 import shutil
-import datetime
 
-from PIL import Image, ExifTags
+from PIL import ExifTags, Image
 
 APPSUPP = os.path.expanduser("~/Library/Application Support")
 ASSETS = os.path.join(APPSUPP, "iLifeAssetManagement/assets")

@@ -1,7 +1,7 @@
 """Parse aux file
 """
-import sys
 import re
+import sys
 from collections import OrderedDict
 
 

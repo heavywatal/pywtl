@@ -2,10 +2,10 @@
 Extract \\includegraphics{...} from TeX file and rename them (for PLOS)
 http://journals.plos.org/ploscompbiol/s/figures
 """
-import sys
 import os
 import re
 import shutil
+import sys
 
 
 def finditer(text: str):

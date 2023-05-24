@@ -3,6 +3,7 @@ Convert image to TIFF with LZW algorithm (for PLOS manuscript)
 http://journals.plos.org/ploscompbiol/s/figures
 """
 import os
+
 from PIL import Image
 
 min_width = 789

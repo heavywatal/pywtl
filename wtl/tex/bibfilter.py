@@ -2,8 +2,8 @@
 """
 import sys
 import warnings
-from . import aux
-from . import bib
+
+from . import aux, bib
 
 
 def main():
