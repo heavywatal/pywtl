@@ -25,7 +25,9 @@ class ArgumentParser(argparse.ArgumentParser):
         self.add_argument("-n", "--dry-run", action="store_true")
 
     def parse_args(
-        self, args: list[str] | None = None, namespace: argparse.Namespace | None = None
+        self,
+        args: Sequence[str] | None = None,
+        namespace: argparse.Namespace | None = None,
     ):
         res = super().parse_args(args, namespace)
         assert res is not None
@@ -56,11 +58,13 @@ class ConfigLogging(argparse.Action):
         self,
         parser: argparse.ArgumentParser,  # noqa: ARG002
         namespace: argparse.Namespace,
-        values: str | Sequence[Any] | None,  # noqa: ARG002
-        option_string: str | None = None,  # noqa: ARG002
+        values: str | Sequence[Any] | None,
+        option_string: str | None = None,
     ):
-        value = getattr(namespace, self.dest, 0)
-        setattr(namespace, self.dest, max(value + self.const, -2))
+        assert not values
+        assert option_string
+        current = getattr(namespace, self.dest, 0)
+        setattr(namespace, self.dest, max(current + self.const, -2))
 
 
 class ConsoleHandler(logging.StreamHandler):  # type: ignore[reportMissingTypeArgument]
