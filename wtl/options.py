@@ -21,12 +21,12 @@ def sequential(axes: dict[str, str]):
 
 def product(axes: dict[str, list[str]]):
     for vals in itertools.product(*axes.values()):
-        yield OrderedDict((k, v) for k, v in zip(axes.keys(), vals))
+        yield OrderedDict((k, v) for k, v in zip(axes.keys(), vals, strict=True))
 
 
 def parallel(axes: dict[str, str]):
-    for vals in zip(*axes.values()):
-        yield OrderedDict((k, v) for k, v in zip(axes.keys(), vals))
+    for vals in zip(*axes.values(), strict=True):
+        yield OrderedDict((k, v) for k, v in zip(axes.keys(), vals, strict=True))
 
 
 def cycle(iterable: Iterable[Any], n: int = 2):
@@ -43,8 +43,7 @@ def tandem(iterable: Iterable[dict[str, str]], n: int = 2):
 def optionize(key: str, value: Any):
     if len(key) > 1:
         return f"--{key}={value}"
-    else:
-        return f"-{key}{value}"
+    return f"-{key}{value}"
 
 
 def make_args(values: dict[str, str]):
@@ -61,17 +60,15 @@ def today(remove: str = r"\W"):
     iso = d.isoformat()
     if remove:
         return re.sub(remove, "", iso)
-    else:
-        return iso
+    return iso
 
 
 def now(sep: str = "T", timespec: str = "seconds", remove: str = r"\W"):
-    dt = datetime.datetime.now()
+    dt = datetime.datetime.now(tz=None)
     iso = dt.isoformat(sep, timespec)
     if remove:
         return re.sub(remove, "", iso)
-    else:
-        return iso
+    return iso
 
 
 def demo():
@@ -86,18 +83,18 @@ def demo():
         yield const + args + ["--outdir=" + label]
 
 
-def ArgumentParser(**kwargs: Any):
-    parser = cli.ArgumentParser(**kwargs)
-    parser.add_argument("-j", "--jobs", type=int, default=cpu_count())
-    parser.add_argument("-p", "--parallel", type=int, default=1)
-    parser.add_argument("-r", "--repeat", type=int, default=1)
-    parser.add_argument("--skip", type=int, default=0)
-    parser.add_argument("-o", "--outdir", default=".stdout")
-    return parser
+class ArgumentParser(cli.ArgumentParser):
+    def __init__(self, *args: Any, **kwargs: Any):
+        super().__init__(*args, **kwargs)
+        self.add_argument("-j", "--jobs", type=int, default=cpu_count())
+        self.add_argument("-p", "--parallel", type=int, default=1)
+        self.add_argument("-r", "--repeat", type=int, default=1)
+        self.add_argument("--skip", type=int, default=0)
+        self.add_argument("-o", "--outdir", default=".stdout")
 
 
 if __name__ == "__main__":
-    parser = cli.ArgumentParser()
+    parser = ArgumentParser()
     args = parser.parse_args()
     print(inspect.getsource(demo))
     print(">>> map_async(demo(), cpu_count())")

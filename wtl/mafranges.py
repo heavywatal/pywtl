@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 mafRanges in.maf db out.bed
 """
@@ -7,10 +6,12 @@ import re
 import sys
 from pathlib import Path
 
+from . import cli
+
 
 def readiter(infile: Path):
     pattern = r"a score=([\d.]+)\ns (\S+)\.(\S+)\s+(\d+)\s+(\d+)\s+(\S+)"
-    with open(infile, "r") as fin:
+    with infile.open("r") as fin:
         for mobj in re.finditer(pattern, fin.read()):
             (score, _species, chrom, start, size, strand) = mobj.groups()
             score = int(float(score))
@@ -21,9 +22,7 @@ def readiter(infile: Path):
 
 
 def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-v", "--verbose", action="store_true")
-    parser.add_argument("-n", "--dry-run", action="store_true")
+    parser = cli.ArgumentParser()
     parser.add_argument("infile", type=Path)
     parser.add_argument(
         "outfile", nargs="?", type=argparse.FileType("w"), default=sys.stdout

@@ -1,7 +1,7 @@
 """
 """
+import argparse
 import re
-from typing import Match
 
 abbrevs = [
     "Acad",
@@ -66,13 +66,12 @@ abbrevs = [
 
 
 def sub_pagerange(string: str):
-    def repl(mobj: Match[str]):
+    def repl(mobj: re.Match[str]):
         (start, end) = mobj.groups()
         if int(start) > int(end):
             end = start[: -len(end)] + end
             return f"{start}--{end}"
-        else:
-            return mobj.group()
+        return mobj.group()
 
     return re.sub(r"(\d+)--(\d+)", repl, string)
 
@@ -92,8 +91,6 @@ def sub_command(string: str):
 
 
 def main():
-    import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument("bbl", type=argparse.FileType("r+"))
     args = parser.parse_args()

@@ -2,7 +2,8 @@
 Convert image to TIFF with LZW algorithm (for PLOS manuscript)
 http://journals.plos.org/ploscompbiol/s/figures
 """
-import os
+import argparse
+from pathlib import Path
 
 from PIL import Image
 
@@ -22,12 +23,11 @@ def remove_alpha(img: Image.Image, bg_color: tuple[int, int, int] = (255, 255, 2
     return img_rgb
 
 
-def compress(infile: str):
+def compress(infile: Path):
     img = Image.open(infile)
     img = remove_alpha(img)
     print(f"{infile} [{img.size[0]}x{img.size[1]}]")
-    (base, _) = os.path.splitext(infile)
-    outfile = os.path.basename(base) + ".tif"
+    outfile = infile.stem + ".tif"
     img.thumbnail((max_width, max_height), Image.LANCZOS)
     print(f"\t=> {outfile} [{img.size[0]}x{img.size[1]}]")
     img.save(outfile, compression="tiff_lzw", dpi=(300.0, 300.0))
@@ -36,10 +36,8 @@ def compress(infile: str):
 
 
 def main():
-    import argparse
-
     parser = argparse.ArgumentParser()
-    parser.add_argument("infile", nargs="*")
+    parser.add_argument("infile", nargs="*", type=Path)
     args = parser.parse_args()
     for x in args.infile:
         compress(x)

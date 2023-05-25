@@ -1,5 +1,6 @@
 """Remove meta data of Bibdesk
 """
+import argparse
 import re
 import sys
 
@@ -22,8 +23,6 @@ def rename(string: str):
 
 
 def main():
-    import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-o", "--outfile", type=argparse.FileType("w"), default=sys.stdout

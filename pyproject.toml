@@ -36,4 +36,13 @@ Source = "https://github.com/heavywatal/pywtl"
 typeCheckingMode = "strict"
 
 [tool.ruff]
-select = ["E", "F", "W", "I"]
+select = ["ALL"]
+ignore = [
+  "D",    # docstring
+  "ANN",  # annotation
+  "T201", # print
+  "S101", # assert
+  "S603", # subprocess
+  "COM",  # trailing comma
+  "DTZ",  # timezone
+]

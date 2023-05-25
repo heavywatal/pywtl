@@ -1,14 +1,15 @@
 """Filter bibtex entries with aux citations
 """
+import argparse
+import logging
 import sys
-import warnings
 
 from . import aux, bib
 
+_log = logging.getLogger(__name__)
+
 
 def main():
-    import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-o", "--outfile", type=argparse.FileType("w"), default=sys.stdout
@@ -19,11 +20,11 @@ def main():
     auxkeys = aux.collect_citekeys(args.aux.read())
     entries = bib.read_entries(args.bib)
     entries = [x for x in entries if x.key in auxkeys]
-    bibkeys = set(x.key for x in entries)
+    bibkeys = {x.key for x in entries}
     assert len(entries) == len(bibkeys)
     notfound = auxkeys - bibkeys
     if notfound:
-        warnings.warn("Entry not found: " + str(notfound))
+        _log.warning(f"Entry not found: {notfound}")
     args.outfile.writelines(str(x) for x in entries)
 
 

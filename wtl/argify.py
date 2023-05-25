@@ -1,6 +1,7 @@
 """
 Convert clippson JSON to command line arguments
 """
+import argparse
 import json
 
 
@@ -15,8 +16,6 @@ def argify(obj: dict[str, str]):
 
 
 def main():
-    import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument("infile", nargs="?", default="-", type=argparse.FileType("r"))
     args = parser.parse_args()

@@ -1,11 +1,14 @@
 """Concurrent shell execution
 """
 import concurrent.futures as confu
+import contextlib
 import logging
 import os
 import re
 import subprocess
-from typing import Any, Iterable
+from collections.abc import Iterable
+from pathlib import Path
+from typing import Any
 
 from . import cli
 
@@ -24,7 +27,7 @@ except ImportError:
 
 def run(
     command: str | list[str],
-    outdir: str = "",
+    outdir: Path = Path("."),
     **popenargs: Any,
 ):
     popenargs.setdefault("shell", True)
@@ -34,31 +37,32 @@ def run(
         command = " ".join(command)
     if re.search(r"\brm\b", command):
         _log.error(command)
-        raise ValueError("rm is not allowed")
+        msg = "rm is not allowed"
+        raise ValueError(msg)
     if cli.dry_run:
         command = "#" + command
     elif outdir:
         outfile = re.sub(r"\s+-", "-", command)
         outfile = re.sub(r"[^\w\-]+", "_", outfile).strip("_")
         outfile += f".{os.getpid()}.txt"
-        outfile = os.path.join(outdir, outfile)
-        popenargs["stdout"] = open(outfile, "ab")
+        outfile = outdir / outfile
+        popenargs["stdout"] = outfile.open("ab")
     try:
         return subprocess.run(command, text=True, **popenargs)
     finally:
-        try:
+        with contextlib.suppress(AttributeError):
             popenargs["stdout"].close()
-        except AttributeError:
-            pass
 
 
 def map_async(
     commands: Iterable[list[str]],
-    max_workers: int | None = cpu_count(),
-    outdir: str = "",
+    max_workers: int | None = None,
+    outdir: Path = Path("."),
 ):
+    if max_workers is None:
+        max_workers = cpu_count()
     if outdir:
-        assert os.path.exists(outdir), outdir + " does not exist"
+        assert outdir.exists(), f"{outdir} does not exist"
     with confu.ThreadPoolExecutor(max_workers=max_workers) as executor:
         fs = [executor.submit(run, cmd, outdir) for cmd in commands]
         for future in confu.as_completed(fs):
@@ -70,7 +74,7 @@ def map_async(
 def main():
     parser = cli.ArgumentParser()
     parser.add_argument("-j", "--jobs", type=int, default=cpu_count())
-    parser.add_argument("-o", "--outdir")
+    parser.add_argument("-o", "--outdir", type=Path)
     parser.add_argument("command", nargs="+")
     args = parser.parse_args()
     _log.info(f"{cpu_count() = }")

@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 """
 import argparse
@@ -16,7 +15,7 @@ def main():
     parser.add_argument("outfile", nargs="?", type=argparse.FileType("w"), default="-")
     args = parser.parse_args()
     fun(args.infile)
-    with open(args.infile) as fin:
+    with args.infile.open() as fin:
         args.outfile.write(fin.read())
 
 

@@ -1,8 +1,9 @@
 """Parse bib file
 """
+import argparse
 import re
 import sys
-from typing import Match, TextIO
+from typing import TextIO
 
 required_keys = [
     "author",
@@ -34,15 +35,15 @@ class BibEntry:
             key = mobj.group(1).lower()
             if key in required_keys:
                 value = mobj.group(2)
-                # if key == 'author':
-                #     value = sanitize_author(value)
+                if False:  # key == "author":
+                    value = sanitize_author(value)
                 if key == "pages":
                     value = sub_pagerange(value)
                 self.tags[key] = value
 
     def __str__(self):
         s = self.type + "{" + self.key + ",\n\t"
-        s += ",\n\t".join([" = ".join([k, v]) for k, v in self.tags.items()])
+        s += ",\n\t".join([f"{k} = {v}" for k, v in self.tags.items()])
         s += "}\n\n"
         return s
 
@@ -52,7 +53,7 @@ def sanitize_author(string: str):
 
 
 def sub_pagerange(string: str):
-    def repl(mobj: Match[str]):
+    def repl(mobj: re.Match[str]):
         (start, end) = mobj.groups()
         if int(start) > int(end):
             end = start[: -len(end)] + end
@@ -62,8 +63,6 @@ def sub_pagerange(string: str):
 
 
 def main():
-    import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", "--number", action="store_true")
     parser.add_argument("-k", "--keys", action="store_true")

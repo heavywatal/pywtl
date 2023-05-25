@@ -5,27 +5,30 @@ import datetime
 import os
 import re
 import shutil
+from pathlib import Path
 
 from PIL import ExifTags, Image
 
-APPSUPP = os.path.expanduser("~/Library/Application Support")
-ASSETS = os.path.join(APPSUPP, "iLifeAssetManagement/assets")
-PHOTOS = os.path.expanduser("~/Pictures/Photos Library.photoslibrary/Masters")
+from . import cli
+
+APPSUPP = Path("~/Library/Application Support").expanduser()
+ASSETS = APPSUPP / "iLifeAssetManagement/assets"
+PHOTOS = Path("~/Pictures/Photos Library.photoslibrary/Masters").expanduser()
 
 
-def ls_recursive(topdir: str = PHOTOS):
+def ls_recursive(topdir: Path = PHOTOS):
     patt = re.compile(r"jpg$|png$", re.IGNORECASE)
-    paths: list[str] = []
+    paths: list[Path] = []
     for root, _, files in os.walk(topdir):
         for afile in files:
             if patt.search(afile):
-                paths.append(os.path.join(root, afile))
+                paths.append(Path(root) / afile)
     return sorted(paths, key=os.path.basename)
 
 
 def decode_exif(image: Image.Image):
-    ret: dict[str, str] = dict()
-    exif: dict[int, str] = image._getexif()
+    ret: dict[str, str] = {}
+    exif: dict[int, str] = image._getexif()  # noqa: SLF001
     for tag, value in exif.items():
         key = ExifTags.TAGS.get(tag)
         if key:
@@ -35,10 +38,7 @@ def decode_exif(image: Image.Image):
 
 def parse_filename(src: str):
     mobj = re.search(r"(pub|sub-shared|watch)/", src)
-    if mobj:
-        label = mobj.group(1)[0]
-    else:
-        label = ""
+    label = mobj.group(1)[0] if mobj else ""
     sec = os.path.getmtime(src)
     dt = datetime.datetime.fromtimestamp(sec)
     time_stamp = dt.isoformat()
@@ -55,50 +55,47 @@ def parse_filename(src: str):
     return "_".join([time_stamp, label + basename_])
 
 
-def transfer(src: str, dst: str, delete: bool = False, dry_run: bool = False):
+def transfer(src: Path, dst: Path, *, delete: bool = False):
     func = shutil.move if delete else shutil.copy2
-    if os.path.exists(dst):
+    if dst.exists():
         # temporal code
-        if delete and os.path.basename(src) != os.path.basename(dst):
-            print("duplicate: " + " ".join([src, dst]))
-            if not dry_run:
-                os.remove(src)
+        if delete and src.name != dst.name:
+            print(f"duplicate: {src}, {dst}")
+            if not cli.dry_run:
+                src.unlink()
     else:
         print([src, dst])
-        if not dry_run:
+        if not cli.dry_run:
             func(src, dst)
 
 
 def main():
-    import argparse
-
-    parser = argparse.ArgumentParser()
-    parser.add_argument("-n", "--dry-run", action="store_true")
-    parser.add_argument("-d", "--delete", action="store_true")
+    parser = cli.ArgumentParser()
+    parser.add_argument("-D", "--delete", action="store_true")
     parser.add_argument("-i", "--iphoto", action="store_true")
-    parser.add_argument("-o", "--outdir", default=os.path.expanduser("~/tmp"))
-    parser.add_argument("files", nargs="*")
+    parser.add_argument("-o", "--outdir", default=Path("~/tmp").expanduser(), type=Path)
+    parser.add_argument("files", nargs="*", type=Path)
     args = parser.parse_args()
 
     if args.files:
         for src in args.files:
-            dst = os.path.join(args.outdir, parse_filename(src))
-            transfer(src, dst, args.delete, args.dry_run)
+            dst = args.outdir / parse_filename(src.name)
+            transfer(src, dst, delete=args.delete)
     elif args.iphoto:
         assert not args.delete
-        outdir = os.path.expanduser("~/Pictures/PhotoStream")
+        outdir = Path("~/Pictures/PhotoStream").expanduser()
         assets = ("pub", "sub", "sub-shared", "watch")
         for label in assets:
-            top = os.path.join(ASSETS, label)
+            top = ASSETS / label
             for src in ls_recursive(top):
-                dst = os.path.join(outdir, parse_filename(src))
-                transfer(src, dst, args.delete, args.dry_run)
+                dst = outdir / parse_filename(src.name)
+                transfer(src, dst, delete=args.delete)
     else:
         assert not args.delete
-        outdir = os.path.expanduser("~/Pictures/PhotosBackup")
+        outdir = Path("~/Pictures/PhotosBackup").expanduser()
         for src in ls_recursive():
-            dst = os.path.join(outdir, parse_filename(src))
-            transfer(src, dst, args.delete, args.dry_run)
+            dst = outdir / parse_filename(src.name)
+            transfer(src, dst, delete=args.delete)
 
 
 if __name__ == "__main__":

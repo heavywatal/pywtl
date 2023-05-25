@@ -1,5 +1,6 @@
 """Parse aux file
 """
+import argparse
 import re
 import sys
 from collections import OrderedDict
@@ -22,8 +23,6 @@ def collect_labels(content: str):
 
 
 def main():
-    import argparse
-
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "infile", nargs="?", default=sys.stdin, type=argparse.FileType("r")

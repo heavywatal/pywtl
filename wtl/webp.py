@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 """
 import logging
@@ -20,7 +19,7 @@ def magick(infile: Path, quality: int = 0):
     return command
 
 
-def cwebp(infile: Path, lossless: bool = True):
+def cwebp(infile: Path, *, lossless: bool = True):
     outfile = infile.with_suffix(".webp")
     command: list[str] = ["cwebp", str(infile)]
     if lossless:
