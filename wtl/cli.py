@@ -1,7 +1,12 @@
 import argparse
+import concurrent.futures as confu
 import logging
-from collections.abc import Sequence
-from typing import Any
+import os
+from collections.abc import Callable, Iterable, Sequence
+from pathlib import Path
+from typing import Any, TypeAlias
+
+FuturePath: TypeAlias = confu.Future[Path]
 
 dry_run = False
 
@@ -23,6 +28,7 @@ class ArgumentParser(argparse.ArgumentParser):
         group.add_argument("-v", "--verbose", action=ConfigLogging, const=1)
         group.add_argument("-q", "--quiet", action=ConfigLogging, const=-1)
         self.add_argument("-n", "--dry-run", action="store_true")
+        self.add_argument("-j", "--jobs", type=int, default=os.cpu_count())
 
     def parse_args(
         self,
@@ -39,6 +45,7 @@ class ArgumentParser(argparse.ArgumentParser):
         logging.logThreads = False
         logging.logProcesses = False
         logging.logMultiprocessing = False
+        ThreadPool(res.jobs)
         return res
 
 
@@ -72,6 +79,27 @@ class ConsoleHandler(logging.StreamHandler):  # type: ignore[reportMissingTypeAr
         if record.levelno < logging.WARNING:
             return record.msg
         return super().format(record)
+
+
+class ThreadPool:
+    _instance = None
+
+    def __new__(cls, max_workers: int | None = None):
+        if cls._instance is None:
+            cls._instance = confu.ThreadPoolExecutor(max_workers)
+        elif max_workers is not None:
+            maxw = cls._instance._max_workers  # noqa: SLF001
+            _log.warning(f"max_workers = {maxw}; ignored {max_workers}")
+        return cls._instance
+
+
+def thread_submit(fn: Callable[..., Any], /, *args: Any, **kwargs: Any):
+    return ThreadPool().submit(fn, *args, **kwargs)
+
+
+def wait_raise(futures: Iterable[confu.Future[Any]]):
+    for f in confu.as_completed(futures):
+        f.result()
 
 
 def main(argv: list[str] | None = None):
