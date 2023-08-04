@@ -8,7 +8,7 @@ from . import cli
 
 def sub(pattern: str, repl: str):
     rex = re.compile(pattern)
-    for oldpath in Path(".").iterdir():
+    for oldpath in Path().iterdir():
         newname, n = rex.subn(repl, oldpath.name)
         if n:
             oldname = rex.sub(lambda m: emphasize(m[0]), oldpath.name)

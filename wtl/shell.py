@@ -27,7 +27,7 @@ except ImportError:
 
 def run(
     command: str | list[str],
-    outdir: Path = Path("."),
+    outdir: Path = Path(),
     **popenargs: Any,
 ):
     popenargs.setdefault("shell", True)
@@ -57,7 +57,7 @@ def run(
 def map_async(
     commands: Iterable[list[str]],
     max_workers: int | None = None,
-    outdir: Path = Path("."),
+    outdir: Path = Path(),
 ):
     if max_workers is None:
         max_workers = cpu_count()

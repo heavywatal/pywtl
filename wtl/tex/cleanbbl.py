@@ -87,7 +87,7 @@ def sub_command(string: str):
     string = re.sub(r"{\\bf\s*", r"\\textbf{", string)
     string = re.sub(r"{\\it\s*", r"\\textit{", string)
     string = re.sub(r"{\\em\s*", r"\\textit{", string)
-    return string
+    return string  # noqa: RET504
 
 
 def main():
