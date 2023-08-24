@@ -1,10 +1,10 @@
 """
 """
 import logging
+import subprocess
 from pathlib import Path
 
 from . import cli
-from .shell import cpu_count, map_async
 
 _log = logging.getLogger(__name__)
 
@@ -30,8 +30,7 @@ def cwebp(infile: Path, *, lossless: bool = True):
 
 def main():
     parser = cli.ArgumentParser()
-    parser.add_argument("-j", "--jobs", type=int, default=cpu_count())
-    parser.add_argument("-q", "--quality", type=int, default=0)
+    parser.add_argument("-Q", "--quality", type=int, default=0)
     parser.add_argument("infile", nargs="*", type=Path)
     args = parser.parse_args()
     commands: list[list[str]] = []
@@ -40,7 +39,12 @@ def main():
             commands.append(magick(infile, quality=args.quality))
         else:
             commands.append(cwebp(infile))
-    map_async(commands, args.jobs, outdir="")
+    if cli.dry_run:
+        for cmd in commands:
+            print(" ".join(cmd))
+    else:
+        fs = [cli.thread_submit(subprocess.run, x, check=True) for x in commands]
+        cli.wait_raise(fs)
 
 
 if __name__ == "__main__":

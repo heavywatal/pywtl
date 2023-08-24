@@ -10,7 +10,6 @@ from collections.abc import Iterable
 from typing import Any
 
 from . import cli
-from .shell import cpu_count, map_async
 
 
 def sequential(axes: dict[str, str]):
@@ -86,8 +85,6 @@ def demo():
 class ArgumentParser(cli.ArgumentParser):
     def __init__(self, *args: Any, **kwargs: Any):
         super().__init__(*args, **kwargs)
-        self.add_argument("-j", "--jobs", type=int, default=cpu_count())
-        self.add_argument("-p", "--parallel", type=int, default=1)
         self.add_argument("-r", "--repeat", type=int, default=1)
         self.add_argument("--skip", type=int, default=0)
         self.add_argument("-o", "--outdir", default=".stdout")
@@ -97,5 +94,5 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     args = parser.parse_args()
     print(inspect.getsource(demo))
-    print(">>> map_async(demo(), cpu_count())")
-    map_async(demo(), cpu_count())
+    for x in demo():
+        print(" ".join(x))
