@@ -12,7 +12,8 @@ def gs_pdfwrite(infiles: list[str], outputfile: str, *, quiet: bool = False):
     args.append(f"-sOutputFile={outputfile}")
     args.extend(infiles)
     print(" ".join(args))
-    subprocess.run(args, shell=False)
+    if not cli.dry_run:
+        subprocess.run(args, check=True)
 
 
 def main():

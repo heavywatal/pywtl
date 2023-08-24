@@ -48,7 +48,7 @@ def run(
         outfile = outdir / outfile
         popenargs["stdout"] = outfile.open("ab")
     try:
-        return subprocess.run(command, text=True, **popenargs)
+        return subprocess.run(command, text=True, check=False, **popenargs)
     finally:
         with contextlib.suppress(AttributeError):
             popenargs["stdout"].close()
@@ -73,7 +73,6 @@ def map_async(
 
 def main():
     parser = cli.ArgumentParser()
-    parser.add_argument("-j", "--jobs", type=int, default=cpu_count())
     parser.add_argument("-o", "--outdir", type=Path)
     parser.add_argument("command", nargs="+")
     args = parser.parse_args()
