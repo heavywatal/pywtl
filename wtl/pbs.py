@@ -3,7 +3,7 @@ import logging
 import re
 from pathlib import Path
 
-from aligons.util import cli
+from wtl import cli
 
 _log = logging.getLogger(__name__)
 
