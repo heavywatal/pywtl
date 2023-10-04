@@ -49,7 +49,9 @@ def sslenc(content: str, password: str, *, decrypt: bool = False):
     if decrypt:
         cmd.append("-d")
     cmd.extend(["-pass", f"pass:{password}"])
-    p = subprocess.run(cmd, input=content, stdout=subprocess.PIPE, text=True)
+    p = subprocess.run(
+        cmd, input=content, stdout=subprocess.PIPE, text=True, check=True
+    )
     return p.stdout
 
 
