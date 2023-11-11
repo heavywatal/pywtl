@@ -16,7 +16,7 @@ _log = logging.getLogger(__name__)
 
 def main():
     pictures_dir = Path("~/Pictures").expanduser()
-    photoslibrary = pictures_dir / "Photos Library.photoslibrary"
+    photoslibrary = pictures_dir / "PhotosLibrary.photoslibrary"
     originals_dir = photoslibrary / "originals"
     outdir = pictures_dir / "PhotosBackup"
     latest_csv = max(pictures_dir.glob("PhotosLibrary_*.csv"))
@@ -43,6 +43,7 @@ def do_backup(backup_dir: Path, orig_dir: Path, library_csv: Path):
 
 
 def test_backup(backup_dir: Path, orig_dir: Path, library_csv: Path):
+    test_library_dups(orig_dir, library_csv)
     only_in_photosbackup = {
         with_suffix_lower(x).name: x for x in backup_dir.rglob("20*") if x.is_file()
     }
@@ -64,6 +65,17 @@ def test_backup(backup_dir: Path, orig_dir: Path, library_csv: Path):
         for name, path in only_in_photosbackup.items():
             symlink(path, linkdir / name)
     test_backup_dups(backup_dir)
+
+
+def test_library_dups(orig_dir: Path, library_csv: Path):
+    dup_checker: dict[Path, list[Path]] = {}
+    for src, reldst in iter_src_reldst(orig_dir, library_csv):
+        dup_checker.setdefault(reldst, []).append(src)
+    for reldst, srcs in dup_checker.items():
+        if len(srcs) > 1:
+            _log.warning(f"duplicated: {reldst}")
+            for src in srcs:
+                _log.info(f"{src} {src.exists()}")
 
 
 def test_backup_dups(backup_dir: Path):
