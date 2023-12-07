@@ -43,6 +43,5 @@ ignore = [
   "T201", # print
   "S101", # assert
   "S603", # subprocess
-  "COM",  # trailing comma
-  "DTZ",  # timezone
+  "COM812", # trailing comma
 ]

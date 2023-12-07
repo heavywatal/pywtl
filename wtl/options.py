@@ -1,10 +1,10 @@
 """For running a program in various parameters
 """
-import datetime
 import inspect
 import itertools
 import os
 import re
+import time
 from collections import OrderedDict
 from collections.abc import Iterable
 from typing import Any
@@ -55,16 +55,14 @@ def join(args: list[str]):
 
 
 def today(remove: str = r"\W"):
-    d = datetime.date.today()
-    iso = d.isoformat()
+    iso = time.strftime("%F")
     if remove:
         return re.sub(remove, "", iso)
     return iso
 
 
-def now(sep: str = "T", timespec: str = "seconds", remove: str = r"\W"):
-    dt = datetime.datetime.now(tz=None)
-    iso = dt.isoformat(sep, timespec)
+def now(sep: str = "T", remove: str = r"\W"):
+    iso = time.strftime(f"%F{sep}%T")
     if remove:
         return re.sub(remove, "", iso)
     return iso
