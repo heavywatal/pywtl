@@ -1,5 +1,4 @@
-"""Concurrent shell execution
-"""
+"""Concurrent shell execution."""
 import concurrent.futures as confu
 import contextlib
 import logging

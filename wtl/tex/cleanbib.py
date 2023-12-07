@@ -1,5 +1,4 @@
-"""Remove meta data of Bibdesk
-"""
+"""Remove meta data of Bibdesk."""
 import argparse
 import re
 import sys
@@ -13,7 +12,7 @@ def rm_comment(string: str):
 
 
 def rm_annote(string: str):
-    """Be careful when using {braces} or other special characters"""
+    """Be careful when using {braces} or other special characters."""
     return re.sub(r",\s+Annote = {.*?}(?=[,}])", "", string, flags=re.DOTALL)
 
 

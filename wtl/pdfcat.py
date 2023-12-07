@@ -1,5 +1,4 @@
-"""Concatenate PDFs
-"""
+"""Concatenate PDFs."""
 import subprocess
 
 from . import cli

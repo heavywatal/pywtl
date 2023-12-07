@@ -1,5 +1,4 @@
-"""Workadound for Pandoc
-"""
+"""Workadound for Pandoc."""
 import argparse
 import pathlib
 import pprint
@@ -16,7 +15,8 @@ def resolve_ref(content: str, labelmap: dict[str, str]):
 
 
 def figure_table(content: str, labelmap: dict[str, str]):
-    """
+    """Format caption.
+
     - Remove asterisks from {table*} and {figure*}
     - Add labels to captions
     """

@@ -1,5 +1,4 @@
-"""Post messages to Slack with Incoming WebHooks
-"""
+"""Post messages to Slack with Incoming WebHooks."""
 import json
 import os
 import pkgutil

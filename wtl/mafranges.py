@@ -1,6 +1,4 @@
-"""
-mafRanges in.maf db out.bed
-"""
+"""Convert ranges of MAF to BED."""
 import argparse
 import re
 import sys
@@ -14,11 +12,12 @@ def readiter(infile: Path):
     with infile.open("r") as fin:
         for mobj in re.finditer(pattern, fin.read()):
             (score, _species, chrom, start, size, strand) = mobj.groups()
+            name = f"{chrom}.{start}"
             score = int(float(score))
             start = int(start)
             size = int(size)
             end = start + size
-            yield f"{chrom}\t{start}\t{end}\t{chrom}.{start}\t{score}\t{strand}"
+            yield f"{chrom}\t{start}\t{end}\t{name}\t{score}\t{strand}"
 
 
 def main():

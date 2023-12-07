@@ -1,5 +1,4 @@
-"""Parse bib file
-"""
+"""Parse bib file."""
 import argparse
 import re
 import sys

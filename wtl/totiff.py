@@ -1,5 +1,5 @@
-"""
-Convert image to TIFF with LZW algorithm (for PLOS manuscript)
+"""Convert image to TIFF with LZW algorithm (for PLOS manuscript).
+
 http://journals.plos.org/ploscompbiol/s/figures
 """
 import argparse
@@ -14,9 +14,7 @@ max_height = 2625
 
 
 def remove_alpha(img: Image.Image, bg_color: tuple[int, int, int] = (255, 255, 255)):
-    """
-    Alpha composition makes smoother edges than img.convert('RGB')
-    """
+    """Alpha composition makes smoother edges than img.convert('RGB')."""
     img_rgb = Image.new("RGB", img.size, bg_color)
     alpha_layer = img.split()[3]
     img_rgb.paste(img, mask=alpha_layer)

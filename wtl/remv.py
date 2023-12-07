@@ -1,5 +1,4 @@
-"""mv with regex
-"""
+"""mv with regex."""
 import re
 from pathlib import Path
 

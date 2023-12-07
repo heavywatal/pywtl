@@ -1,6 +1,4 @@
-"""
-Sort "Photos Library" by date
-"""
+"""Sort "Photos Library" by date."""
 import csv
 import logging
 import os

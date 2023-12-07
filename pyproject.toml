@@ -38,7 +38,9 @@ typeCheckingMode = "strict"
 [tool.ruff]
 select = ["ALL"]
 ignore = [
-  "D",    # docstring
+  "D1",   # docstring missing
+  "D203", # docstring one-blank-line-before-class
+  "D213", # docstring multi-line-summary-second-line
   "ANN",  # annotation
   "T201", # print
   "S101", # assert
