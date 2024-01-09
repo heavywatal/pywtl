@@ -13,16 +13,6 @@ from . import cli
 
 _log = logging.getLogger(__name__)
 
-try:
-    import psutil
-
-    def cpu_count() -> int | None:
-        return psutil.cpu_count(logical=False)
-
-except ImportError:
-    _log.warning("psutil is missing; cpu_count(logical=True)")
-    from os import cpu_count
-
 
 def run(
     command: str | list[str],
@@ -58,8 +48,6 @@ def map_async(
     max_workers: int | None = None,
     outdir: Path = Path(),
 ):
-    if max_workers is None:
-        max_workers = cpu_count()
     if outdir:
         assert outdir.exists(), f"{outdir} does not exist"
     with confu.ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -75,7 +63,7 @@ def main():
     parser.add_argument("-o", "--outdir", type=Path)
     parser.add_argument("command", nargs="+")
     args = parser.parse_args()
-    _log.info(f"{cpu_count() = }")
+    _log.info(f"{os.cpu_count() = }")
     map_async(args.command, args.jobs, args.outdir)
 
 
