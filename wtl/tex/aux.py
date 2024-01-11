@@ -5,7 +5,7 @@ import sys
 from collections import OrderedDict
 
 
-def collect_citekeys(content: str):
+def collect_citekeys(content: str) -> set[str]:
     patt = re.compile(r"\\citation{(.+?)}")
     keys: set[str] = set()
     for mobj in patt.finditer(content):
@@ -13,7 +13,7 @@ def collect_citekeys(content: str):
     return keys
 
 
-def collect_labels(content: str):
+def collect_labels(content: str) -> dict[str, str]:
     patt = re.compile(r"\\newlabel{(.+?)}{{([^}]+)}")
     labels: dict[str, str] = OrderedDict()
     for mobj in patt.finditer(content):
@@ -21,7 +21,7 @@ def collect_labels(content: str):
     return labels
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "infile", nargs="?", default=sys.stdin, type=argparse.FileType("r")

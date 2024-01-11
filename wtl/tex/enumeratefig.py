@@ -6,18 +6,19 @@ import argparse
 import re
 import shutil
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 
 from wtl import cli
 
 
-def finditer(text: str):
+def finditer(text: str) -> Iterator[str]:
     pattern = r"^.*(?<!%).*\\includegraphics.*?{(\S+?)}"
     for mobj in re.finditer(pattern, text, re.M):
         yield mobj.group(1)
 
 
-def main():
+def main() -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("-i", "--indir", default="", type=Path)
     parser.add_argument("-o", "--outdir", default="", type=Path)

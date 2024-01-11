@@ -4,7 +4,7 @@ import subprocess
 from . import cli
 
 
-def gs_pdfwrite(infiles: list[str], outputfile: str, *, quiet: bool = False):
+def gs_pdfwrite(infiles: list[str], outputfile: str, *, quiet: bool = False) -> None:
     args = ["gs", "-dNOPAUSE", "-dBATCH", "-sDEVICE=pdfwrite"]
     if quiet:
         args.append("-q")
@@ -15,7 +15,7 @@ def gs_pdfwrite(infiles: list[str], outputfile: str, *, quiet: bool = False):
         subprocess.run(args, check=True)
 
 
-def main():
+def main() -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("-o", "--outfile", default="_merged.pdf")
     parser.add_argument("infiles", nargs="+")

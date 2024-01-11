@@ -18,13 +18,13 @@ required_keys = [
 ]
 
 
-def read_entries(file: TextIO):
+def read_entries(file: TextIO) -> list["BibEntry"]:
     patt = re.compile(r"@(?!comment).+?}$", re.DOTALL | re.MULTILINE)
     return [BibEntry(m.group(0)) for m in patt.finditer(file.read())]
 
 
 class BibEntry:
-    def __init__(self, string: str):
+    def __init__(self, string: str) -> None:
         (head, body) = string.split(",", 1)
         (self.type, self.key) = head.split("{", 1)
         self.tags: dict[str, str] = {}
@@ -40,19 +40,19 @@ class BibEntry:
                     value = sub_pagerange(value)
                 self.tags[key] = value
 
-    def __str__(self):
+    def __str__(self) -> str:
         s = self.type + "{" + self.key + ",\n\t"
         s += ",\n\t".join([f"{k} = {v}" for k, v in self.tags.items()])
         s += "}\n\n"
         return s
 
 
-def sanitize_author(string: str):
+def sanitize_author(string: str) -> str:
     return re.sub(r"(?<=[^^]){(.+?)}(?=[^$])", r'"\1"', string)
 
 
-def sub_pagerange(string: str):
-    def repl(mobj: re.Match[str]):
+def sub_pagerange(string: str) -> str:
+    def repl(mobj: re.Match[str]) -> str:
         (start, end) = mobj.groups()
         if int(start) > int(end):
             end = start[: -len(end)] + end
@@ -61,7 +61,7 @@ def sub_pagerange(string: str):
     return re.sub(r"(\d+)--?(\d+)", repl, string)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", "--number", action="store_true")
     parser.add_argument("-k", "--keys", action="store_true")

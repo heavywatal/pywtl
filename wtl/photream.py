@@ -12,7 +12,7 @@ from . import cli
 _log = logging.getLogger(__name__)
 
 
-def main():
+def main() -> None:
     pictures_dir = Path("~/Pictures").expanduser()
     photoslibrary = pictures_dir / "PhotosLibrary.photoslibrary"
     originals_dir = photoslibrary / "originals"
@@ -30,7 +30,7 @@ def main():
         do_backup(args.outdir, args.lib, args.csv)
 
 
-def do_backup(backup_dir: Path, orig_dir: Path, library_csv: Path):
+def do_backup(backup_dir: Path, orig_dir: Path, library_csv: Path) -> None:
     for src, reldst in iter_src_reldst(orig_dir, library_csv):
         dst: Path = backup_dir / with_suffix_lower(reldst)
         if not dst.exists():
@@ -40,7 +40,7 @@ def do_backup(backup_dir: Path, orig_dir: Path, library_csv: Path):
                 shutil.copy2(src, dst)
 
 
-def test_backup(backup_dir: Path, orig_dir: Path, library_csv: Path):
+def test_backup(backup_dir: Path, orig_dir: Path, library_csv: Path) -> None:
     test_library_dups(orig_dir, library_csv)
     only_in_photosbackup = {
         with_suffix_lower(x).name: x for x in backup_dir.rglob("20*") if x.is_file()
@@ -65,7 +65,7 @@ def test_backup(backup_dir: Path, orig_dir: Path, library_csv: Path):
     test_backup_dups(backup_dir)
 
 
-def test_library_dups(orig_dir: Path, library_csv: Path):
+def test_library_dups(orig_dir: Path, library_csv: Path) -> None:
     dup_checker: dict[Path, list[Path]] = {}
     for src, reldst in iter_src_reldst(orig_dir, library_csv):
         dup_checker.setdefault(reldst, []).append(src)
@@ -76,7 +76,7 @@ def test_library_dups(orig_dir: Path, library_csv: Path):
                 _log.info(f"{src} {src.exists()}")
 
 
-def test_backup_dups(backup_dir: Path):
+def test_backup_dups(backup_dir: Path) -> None:
     counter: dict[str, list[Path]] = {}
     for path in backup_dir.rglob("20*"):
         if path.is_file():
@@ -126,7 +126,7 @@ def iter_images(directory: Path) -> Iterator[Path]:
                 _log.debug(f"ignoring '{Path(root) / afile}'")
 
 
-def subdir_by_year(directory: Path):
+def subdir_by_year(directory: Path) -> None:
     for src in directory.rglob("20*"):
         if not src.is_file():
             continue

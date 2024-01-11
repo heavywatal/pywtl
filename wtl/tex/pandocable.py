@@ -7,14 +7,14 @@ import re
 from . import aux
 
 
-def resolve_ref(content: str, labelmap: dict[str, str]):
-    def repl(mobj: re.Match[str]):
+def resolve_ref(content: str, labelmap: dict[str, str]) -> str:
+    def repl(mobj: re.Match[str]) -> str:
         return labelmap[mobj.group(1)]
 
     return re.sub(r"\\ref{([^}]+)}", repl, content)
 
 
-def figure_table(content: str, labelmap: dict[str, str]):
+def figure_table(content: str, labelmap: dict[str, str]) -> str:
     """Format caption.
 
     - Remove asterisks from {table*} and {figure*}
@@ -22,7 +22,7 @@ def figure_table(content: str, labelmap: dict[str, str]):
     """
     content = re.sub(r"{(table|figure)\*}", r"{\1}", content)
 
-    def repl(mobj: re.Match[str]):
+    def repl(mobj: re.Match[str]) -> str:
         fig_or_table = classify_label(mobj.group(2))
         num = labelmap[mobj.group(2)]
         return f"caption{{\\textbf{{{fig_or_table} {num}}}. {mobj.group(1)}"
@@ -30,7 +30,7 @@ def figure_table(content: str, labelmap: dict[str, str]):
     return re.sub(r"caption{(.+?)\\label{([^}]+)}", repl, content, flags=re.S)
 
 
-def classify_label(label: str):
+def classify_label(label: str) -> str:
     label = label.lower()
     if label.startswith("fig"):
         return "Figure"
@@ -39,7 +39,7 @@ def classify_label(label: str):
     return "Equation???"
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("infile", type=pathlib.Path)
     args = parser.parse_args()

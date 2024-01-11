@@ -13,7 +13,7 @@ _log = logging.getLogger(__name__.replace("__main__", "_"))
 presets = ["LLVM", "GNU", "Google", "Chromium", "Microsoft", "Mozilla", "Webkit"]
 
 
-def main():
+def main() -> None:
     user_config = Path("~/.clang-format").expanduser()
     parser = cli.ArgumentParser()
     parser.add_argument("-c", "--config", action="store_true")

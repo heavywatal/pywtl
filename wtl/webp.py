@@ -7,7 +7,7 @@ from . import cli
 _log = logging.getLogger(__name__)
 
 
-def magick(infile: Path, quality: int = 0):
+def magick(infile: Path, quality: int = 0) -> list[str]:
     outfile = infile.with_suffix(".webp")
     command: list[str] = ["magick", str(infile)]
     command.extend(["-auto-orient", "-strip"])
@@ -17,7 +17,7 @@ def magick(infile: Path, quality: int = 0):
     return command
 
 
-def cwebp(infile: Path, *, lossless: bool = True):
+def cwebp(infile: Path, *, lossless: bool = True) -> list[str]:
     outfile = infile.with_suffix(".webp")
     command: list[str] = ["cwebp", str(infile)]
     if lossless:
@@ -26,7 +26,7 @@ def cwebp(infile: Path, *, lossless: bool = True):
     return command
 
 
-def main():
+def main() -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("-Q", "--quality", type=int, default=0)
     parser.add_argument("infile", nargs="*", type=Path)

@@ -4,7 +4,7 @@ import site
 import sys
 
 
-def main():
+def main() -> None:
     print(f"Hello, {getpass.getuser()}!")
     print(f"{__file__=}")
     print(f"{sys.executable=}")

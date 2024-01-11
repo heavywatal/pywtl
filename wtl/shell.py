@@ -18,7 +18,7 @@ def run(
     command: str | list[str],
     outdir: Path = Path(),
     **popenargs: Any,
-):
+) -> subprocess.CompletedProcess[Any]:
     popenargs.setdefault("shell", True)
     popenargs.setdefault("stdout", subprocess.PIPE)
     popenargs.setdefault("stderr", subprocess.STDOUT)
@@ -47,7 +47,7 @@ def map_async(
     commands: Iterable[list[str]],
     max_workers: int | None = None,
     outdir: Path = Path(),
-):
+) -> None:
     if outdir:
         assert outdir.exists(), f"{outdir} does not exist"
     with confu.ThreadPoolExecutor(max_workers=max_workers) as executor:
@@ -58,7 +58,7 @@ def map_async(
             _log.info(completed.stdout)
 
 
-def main():
+def main() -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("-o", "--outdir", type=Path)
     parser.add_argument("command", nargs="+")

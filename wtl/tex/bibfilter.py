@@ -8,7 +8,7 @@ from . import aux, bib
 _log = logging.getLogger(__name__)
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-o", "--outfile", type=argparse.FileType("w"), default=sys.stdout

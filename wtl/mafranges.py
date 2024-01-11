@@ -2,12 +2,13 @@
 import argparse
 import re
 import sys
+from collections.abc import Iterator
 from pathlib import Path
 
 from . import cli
 
 
-def readiter(infile: Path):
+def readiter(infile: Path) -> Iterator[str]:
     pattern = r"a score=([\d.]+)\ns (\S+)\.(\S+)\s+(\d+)\s+(\d+)\s+(\S+)"
     with infile.open("r") as fin:
         for mobj in re.finditer(pattern, fin.read()):
@@ -20,7 +21,7 @@ def readiter(infile: Path):
             yield f"{chrom}\t{start}\t{end}\t{name}\t{score}\t{strand}"
 
 
-def main():
+def main() -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("infile", type=Path)
     parser.add_argument(

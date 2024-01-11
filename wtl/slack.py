@@ -11,14 +11,14 @@ import requests
 from . import cli
 
 
-def report(message: str = "", channel: str = "", icon: str = ""):
+def report(message: str = "", channel: str = "", icon: str = "") -> None:
     lines = [" ".join(sys.argv)]
     if message:
         lines.append(message)
     post("\n".join(lines), channel=channel, icon=icon)
 
 
-def post(text: str, channel: str = "", icon: str = ""):
+def post(text: str, channel: str = "", icon: str = "") -> None:
     data = {
         "username": "pywtl@" + socket.gethostname(),
         "icon_emoji": icon or ":snake:",
@@ -36,14 +36,14 @@ def post(text: str, channel: str = "", icon: str = ""):
         print(f"{response.reason=}")
 
 
-def webhook_url():
+def webhook_url() -> str:
     encrypted = pkgutil.get_data("wtl", "slack_webhook_url")
     assert encrypted is not None
     password = os.environ["SLACK_WEBHOOK"]
     return sslenc(encrypted.decode(), password, decrypt=True)
 
 
-def sslenc(content: str, password: str, *, decrypt: bool = False):
+def sslenc(content: str, password: str, *, decrypt: bool = False) -> str:
     cmd = ["openssl", "enc", "-aes256", "-md", "md5", "-a", "-A"]
     if decrypt:
         cmd.append("-d")
@@ -54,7 +54,7 @@ def sslenc(content: str, password: str, *, decrypt: bool = False):
     return p.stdout
 
 
-def main():
+def main() -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("-c", "--channel")
     parser.add_argument("-i", "--icon")

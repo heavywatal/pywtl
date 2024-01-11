@@ -5,7 +5,7 @@ from pathlib import Path
 from . import cli
 
 
-def sub(pattern: str, repl: str):
+def sub(pattern: str, repl: str) -> None:
     rex = re.compile(pattern)
     for oldpath in Path().iterdir():
         newname, n = rex.subn(repl, oldpath.name)
@@ -16,11 +16,11 @@ def sub(pattern: str, repl: str):
                 oldpath.rename(newname)
 
 
-def emphasize(s: str):
+def emphasize(s: str) -> str:
     return f"\033[1m{s}\033[0m"
 
 
-def main():
+def main() -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("pattern")
     parser.add_argument("repl")

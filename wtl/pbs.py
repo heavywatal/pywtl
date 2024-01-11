@@ -8,7 +8,7 @@ from wtl import cli
 _log = logging.getLogger(__name__)
 
 
-def main(argv: list[str] | None = None):
+def main(argv: list[str] | None = None) -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("-N", "--name")
     parser.add_argument("-m", "--mem", type=int, default=1)
@@ -19,7 +19,7 @@ def main(argv: list[str] | None = None):
 
 def generate_qsub_sh(
     command: list[str], name: str | None = None, ncpus: int = 1, mem: int = 1
-):
+) -> None:
     assert ncpus > 0
     assert mem > 0
     name = name or auto_name("_".join(command))
@@ -35,7 +35,7 @@ def generate_qsub_sh(
             fout.write(content)
 
 
-def auto_name(command: str):
+def auto_name(command: str) -> str:
     return re.sub(r"[ \t\n-.]+", "-", command)
 
 
@@ -47,7 +47,7 @@ def pbs_options(name: str, ncpus: int, mem: int) -> dict[str, str]:
     }
 
 
-def add_header_footer(command: list[str]):
+def add_header_footer(command: list[str]) -> list[str]:
     header = ["hostname", "cd $PBS_O_WORKDIR", "pwd", "date -Iseconds"]
     footer = ["date -Iseconds"]
     return [*header, "", *command, "", *footer]

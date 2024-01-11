@@ -3,7 +3,7 @@ import argparse
 import json
 
 
-def argify(obj: dict[str, str]):
+def argify(obj: dict[str, str]) -> list[str]:
     args: list[str] = []
     for key, value in obj.items():
         if len(key) > 1:
@@ -13,7 +13,7 @@ def argify(obj: dict[str, str]):
     return args
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("infile", nargs="?", default="-", type=argparse.FileType("r"))
     args = parser.parse_args()

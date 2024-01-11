@@ -7,7 +7,7 @@ from wtl import cli
 _log = logging.getLogger(__name__)
 
 
-def main():
+def main() -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("-i", "--infile", type=Path, default=__file__)
     parser.add_argument("outfile", nargs="?", type=argparse.FileType("w"), default="-")
@@ -17,7 +17,7 @@ def main():
         args.outfile.write(fin.read())
 
 
-def fun(infile: Path):
+def fun(infile: Path) -> None:
     outfile = infile.with_suffix(".suffix")
     _log.debug(f"{infile = }")
     _log.info(f"{outfile = }")

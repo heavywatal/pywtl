@@ -63,8 +63,8 @@ abbrevs = [
 ]
 
 
-def sub_pagerange(string: str):
-    def repl(mobj: re.Match[str]):
+def sub_pagerange(string: str) -> str:
+    def repl(mobj: re.Match[str]) -> str:
         (start, end) = mobj.groups()
         if int(start) > int(end):
             end = start[: -len(end)] + end
@@ -74,13 +74,13 @@ def sub_pagerange(string: str):
     return re.sub(r"(\d+)--(\d+)", repl, string)
 
 
-def sub_abbrev(string: str):
+def sub_abbrev(string: str) -> str:
     string = re.sub(r"\bU\s+S\s+A\b", "USA", string)
     patt = "(" + "|".join(abbrevs) + r")(?=\s)"
     return re.sub(patt, r"\1.", string)
 
 
-def sub_command(string: str):
+def sub_command(string: str) -> str:
     string = re.sub(r"{\\rm\s*", r"\\textrm{", string)
     string = re.sub(r"{\\bf\s*", r"\\textbf{", string)
     string = re.sub(r"{\\it\s*", r"\\textit{", string)
@@ -88,7 +88,7 @@ def sub_command(string: str):
     return string  # noqa: RET504
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("bbl", type=argparse.FileType("r+"))
     args = parser.parse_args()

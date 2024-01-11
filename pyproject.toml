@@ -41,7 +41,8 @@ ignore = [
   "D1",   # docstring missing
   "D203", # docstring one-blank-line-before-class
   "D213", # docstring multi-line-summary-second-line
-  "ANN",  # annotation
+  "ANN101", # self
+  "ANN401", # Any
   "T201", # print
   "S101", # assert
   "S603", # subprocess
