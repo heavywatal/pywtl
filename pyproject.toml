@@ -35,7 +35,7 @@ Source = "https://github.com/heavywatal/pywtl"
 [tool.pyright]
 typeCheckingMode = "strict"
 
-[tool.ruff]
+[tool.ruff.lint]
 select = ["ALL"]
 ignore = [
   "D1",   # docstring missing
