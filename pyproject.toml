@@ -47,4 +47,5 @@ ignore = [
   "S101", # assert
   "S603", # subprocess
   "COM812", # trailing comma
+  "ISC001", # may conflict with formatter
 ]

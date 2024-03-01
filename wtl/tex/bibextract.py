@@ -1,4 +1,5 @@
 """Extract entries from bib file."""
+
 import argparse
 import re
 import sys

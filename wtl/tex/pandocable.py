@@ -1,4 +1,5 @@
 """Workadound for Pandoc."""
+
 import argparse
 import pathlib
 import pprint

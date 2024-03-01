@@ -1,4 +1,5 @@
 """Convert ranges of MAF to BED."""
+
 import argparse
 import re
 import sys

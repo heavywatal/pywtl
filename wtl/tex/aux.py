@@ -1,4 +1,5 @@
 """Parse aux file."""
+
 import argparse
 import re
 import sys

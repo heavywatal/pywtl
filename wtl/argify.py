@@ -1,4 +1,5 @@
 """Convert clippson JSON to command line arguments."""
+
 import argparse
 import json
 

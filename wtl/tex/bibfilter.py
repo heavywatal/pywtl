@@ -1,4 +1,5 @@
 """Filter bibtex entries with aux citations."""
+
 import argparse
 import logging
 import sys

@@ -1,4 +1,5 @@
 """Remove meta data of Bibdesk."""
+
 import argparse
 import re
 import sys

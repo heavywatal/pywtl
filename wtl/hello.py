@@ -1,4 +1,5 @@
 """Sample module."""
+
 import getpass
 import site
 import sys
