@@ -15,7 +15,7 @@ from wtl import cli
 
 def finditer(text: str) -> Iterator[str]:
     pattern = r"^.*(?<!%).*\\includegraphics.*?{(\S+?)}"
-    for mobj in re.finditer(pattern, text, re.M):
+    for mobj in re.finditer(pattern, text, re.MULTILINE):
         yield mobj.group(1)
 
 

@@ -28,7 +28,7 @@ def figure_table(content: str, labelmap: dict[str, str]) -> str:
         num = labelmap[mobj.group(2)]
         return f"caption{{\\textbf{{{fig_or_table} {num}}}. {mobj.group(1)}"
 
-    return re.sub(r"caption{(.+?)\\label{([^}]+)}", repl, content, flags=re.S)
+    return re.sub(r"caption{(.+?)\\label{([^}]+)}", repl, content, flags=re.DOTALL)
 
 
 def classify_label(label: str) -> str:

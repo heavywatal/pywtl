@@ -16,7 +16,7 @@ def bib_entries(file: TextIO, keys: list[str]) -> list[str]:
 
 def bbl_keys(file: TextIO) -> list[str]:
     content = file.read()
-    return re.findall(r"(?<=\\bibitem\[[^\]]+?\]){([^}]+?)}", content, re.S)
+    return re.findall(r"(?<=\\bibitem\[[^\]]+?\]){([^}]+?)}", content, re.DOTALL)
 
 
 def main() -> None:
