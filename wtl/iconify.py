@@ -40,7 +40,7 @@ def main() -> None:
     args = parser.parse_args()
     toml = args.infile.read()
     args.infile.close()
-    sets: list[IconSet] = tomllib.loads(toml)["sets"]
+    sets: Iterable[IconSet] = tomllib.loads(toml)["sets"]
     _log.info(f"{sets = }")
     make_index_scss(args.outdir, [x["prefix"] for x in sets])
     for item in sets:
@@ -65,7 +65,7 @@ def make_index_scss(outdir: Path, names: Iterable[str]) -> None:
     print(outfile)
 
 
-def fetch_css(prefix: str, icons: list[str]) -> str:
+def fetch_css(prefix: str, icons: Iterable[str]) -> str:
     url = f"https://api.iconify.design/{prefix}.css"
     params = {
         "icons": f"{','.join(icons)}",

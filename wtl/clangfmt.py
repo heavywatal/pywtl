@@ -1,6 +1,7 @@
 import logging
 import subprocess
 from collections import Counter
+from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
@@ -38,7 +39,7 @@ def check_config(file: Path) -> None:
     print(yaml.safe_dump(diffs))
 
 
-def collect(config: dict[str, Any]) -> dict[str, list[str]]:
+def collect(config: Mapping[str, Any]) -> dict[str, list[str]]:
     configs = {x: clang_format_dump_config(x) for x in presets}
     res: dict[str, list[str]] = {}
     for key, value in config.items():
@@ -52,7 +53,7 @@ def collect(config: dict[str, Any]) -> dict[str, list[str]]:
     return res
 
 
-def count(collected: dict[str, list[str]]) -> Counter[str]:
+def count(collected: Mapping[str, list[str]]) -> Counter[str]:
     counter: Counter[str] = Counter()
     uniform: list[str] = []
     len_presets = len(presets)
@@ -69,7 +70,7 @@ def count(collected: dict[str, list[str]]) -> Counter[str]:
     return counter
 
 
-def config_diff(lhs: dict[str, Any], rhs: dict[str, Any]) -> dict[str, str]:
+def config_diff(lhs: Mapping[str, Any], rhs: Mapping[str, Any]) -> dict[str, str]:
     diffs: dict[str, str] = {}
     for key, value in lhs.items():
         if key == "BasedOnStyle":

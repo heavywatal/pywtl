@@ -14,9 +14,9 @@ def collect_citekeys(content: str) -> set[str]:
     return keys
 
 
-def collect_labels(content: str) -> dict[str, str]:
+def collect_labels(content: str) -> OrderedDict[str, str]:
     patt = re.compile(r"\\newlabel{(.+?)}{{([^}]+)}")
-    labels: dict[str, str] = OrderedDict()
+    labels: OrderedDict[str, str] = OrderedDict()
     for mobj in patt.finditer(content):
         labels[mobj.group(1)] = mobj.group(2)
     return labels

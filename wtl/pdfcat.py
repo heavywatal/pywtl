@@ -1,11 +1,14 @@
 """Concatenate PDFs."""
 
 import subprocess
+from collections.abc import Iterable
 
 from . import cli
 
 
-def gs_pdfwrite(infiles: list[str], outputfile: str, *, quiet: bool = False) -> None:
+def gs_pdfwrite(
+    infiles: Iterable[str], outputfile: str, *, quiet: bool = False
+) -> None:
     args = ["gs", "-dNOPAUSE", "-dBATCH", "-sDEVICE=pdfwrite"]
     if quiet:
         args.append("-q")

@@ -4,18 +4,19 @@ import argparse
 import pathlib
 import pprint
 import re
+from collections.abc import Mapping
 
 from . import aux
 
 
-def resolve_ref(content: str, labelmap: dict[str, str]) -> str:
+def resolve_ref(content: str, labelmap: Mapping[str, str]) -> str:
     def repl(mobj: re.Match[str]) -> str:
         return labelmap[mobj.group(1)]
 
     return re.sub(r"\\ref{([^}]+)}", repl, content)
 
 
-def figure_table(content: str, labelmap: dict[str, str]) -> str:
+def figure_table(content: str, labelmap: Mapping[str, str]) -> str:
     """Format caption.
 
     - Remove asterisks from {table*} and {figure*}

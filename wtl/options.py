@@ -6,34 +6,36 @@ import os
 import re
 import time
 from collections import OrderedDict
-from collections.abc import Iterable, Iterator
+from collections.abc import Iterable, Iterator, Mapping
 from typing import Any
 
 from . import cli
 
 
-def sequential(axes: dict[str, str]) -> Iterator[OrderedDict[str, str]]:
+def sequential(axes: Mapping[str, str]) -> Iterator[Mapping[str, str]]:
     for key, vals in axes.items():
         for value in vals:
             yield OrderedDict({key: value})
 
 
-def product(axes: dict[str, list[str]]) -> Iterator[OrderedDict[str, str]]:
+def product(axes: Mapping[str, Iterable[str]]) -> Iterator[Mapping[str, str]]:
     for vals in itertools.product(*axes.values()):
         yield OrderedDict((k, v) for k, v in zip(axes.keys(), vals, strict=True))
 
 
-def parallel(axes: dict[str, str]) -> Iterator[OrderedDict[str, str]]:
+def parallel(axes: Mapping[str, Iterable[Any]]) -> Iterator[Mapping[str, str]]:
     for vals in zip(*axes.values(), strict=True):
         yield OrderedDict((k, v) for k, v in zip(axes.keys(), vals, strict=True))
 
 
-def cycle(iterable: Iterable[Any], n: int = 2) -> Iterator[OrderedDict[str, str]]:
+def cycle(iterable: Iterable[Any], n: int = 2) -> Iterator[Mapping[str, str]]:
     rep = itertools.repeat(tuple(iterable), n)
     return itertools.chain.from_iterable(rep)
 
 
-def tandem(iterable: Iterable[dict[str, str]], n: int = 2) -> Iterator[dict[str, str]]:
+def tandem(
+    iterable: Iterable[Mapping[str, str]], n: int = 2
+) -> Iterator[Mapping[str, str]]:
     for x in iterable:
         for _ in range(n):
             yield x
@@ -45,11 +47,11 @@ def optionize(key: str, value: Any) -> str:
     return f"-{key}{value}"
 
 
-def make_args(values: dict[str, str]) -> list[str]:
+def make_args(values: Mapping[str, str]) -> list[str]:
     return [optionize(k, v) for (k, v) in values.items()]
 
 
-def join(args: list[str]) -> str:
+def join(args: Iterable[str]) -> str:
     label = "_".join([s.lstrip("-") for s in args])
     return label.replace(".", "").replace("=", "")
 
@@ -70,7 +72,7 @@ def now(sep: str = "T", remove: str = r"\W") -> str:
 
 def demo() -> Iterator[list[str]]:
     const = ["a.out", "-v"]
-    axes: dict[str, list[str]] = OrderedDict()
+    axes: OrderedDict[str, list[str]] = OrderedDict()
     axes["D"] = [f"{x:02}" for x in [2, 3]]
     axes["u"] = [f"{x:.2f}" for x in [0.01, 0.1]]
     suffix = f"_{now()}_{os.getpid()}"

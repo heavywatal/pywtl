@@ -2,9 +2,10 @@
 
 import argparse
 import json
+from collections.abc import Mapping
 
 
-def argify(obj: dict[str, str]) -> list[str]:
+def argify(obj: Mapping[str, str]) -> list[str]:
     args: list[str] = []
     for key, value in obj.items():
         if len(key) > 1:

@@ -3,10 +3,11 @@
 import argparse
 import re
 import sys
+from collections.abc import Iterable
 from typing import TextIO
 
 
-def bib_entries(file: TextIO, keys: list[str]) -> list[str]:
+def bib_entries(file: TextIO, keys: Iterable[str]) -> list[str]:
     entries = file.read().strip().split("\n\n")
     if keys:
         pattern = "@(?:[Aa]rticle|[Bb]ook){(" + "|".join(keys) + "),"
