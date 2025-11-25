@@ -1,3 +1,5 @@
-"""Personal Python package."""
+import importlib.metadata
 
-__version__ = "0.1.0"
+assert __package__
+__doc__ = importlib.metadata.metadata(__package__)["Summary"]
+__version__ = importlib.metadata.version(__package__)
