@@ -3,8 +3,10 @@
 import argparse
 import re
 import sys
-from collections.abc import Iterable
-from typing import TextIO
+from typing import TYPE_CHECKING, TextIO
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 
 def bib_entries(file: TextIO, keys: Iterable[str]) -> list[str]:

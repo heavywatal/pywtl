@@ -19,7 +19,7 @@ required_keys = [
 ]
 
 
-def read_entries(file: TextIO) -> list["BibEntry"]:
+def read_entries(file: TextIO) -> list[BibEntry]:
     patt = re.compile(r"@(?!comment).+?}$", re.DOTALL | re.MULTILINE)
     return [BibEntry(m.group(0)) for m in patt.finditer(file.read())]
 

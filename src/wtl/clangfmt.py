@@ -1,9 +1,11 @@
 import logging
 import subprocess
 from collections import Counter
-from collections.abc import Mapping
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 import yaml
 

@@ -6,7 +6,7 @@ authors = [{ name = "Watal M. Iwasaki", email = "heavywatal@gmail.com" }]
 license = "MIT"
 license-files = ["LICENSE"]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.14"
 dependencies = [
   "PyYAML",
   "requests",
@@ -31,7 +31,7 @@ Source = "https://github.com/heavywatal/pywtl"
 "webp.py" = "wtl.webp:main"
 
 [build-system]
-requires = ["uv_build>=0.9.11,<0.10.0"]
+requires = ["uv_build>=0.9.18,<0.10.0"]
 build-backend = "uv_build"
 
 [tool.pyright]

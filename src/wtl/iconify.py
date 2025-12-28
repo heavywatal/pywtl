@@ -17,9 +17,11 @@ import logging
 import re
 import tomllib
 import urllib.parse
-from collections.abc import Iterable
 from pathlib import Path
-from typing import TypedDict
+from typing import TYPE_CHECKING, TypedDict
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable
 
 import requests
 

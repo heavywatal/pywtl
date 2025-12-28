@@ -3,9 +3,11 @@ import concurrent.futures as confu
 import logging
 import os
 import threading
-from collections.abc import Callable, Iterable, Sequence
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Callable, Iterable, Sequence
 
 type FuturePath = confu.Future[Path]
 

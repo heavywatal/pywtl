@@ -2,7 +2,10 @@
 
 import argparse
 import json
-from collections.abc import Mapping
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Mapping
 
 
 def argify(obj: Mapping[str, str]) -> list[str]:

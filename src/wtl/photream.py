@@ -5,8 +5,11 @@ import logging
 import os
 import re
 import shutil
-from collections.abc import Iterator
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 from . import cli
 

@@ -3,8 +3,11 @@
 import argparse
 import re
 import sys
-from collections.abc import Iterator
 from pathlib import Path
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from collections.abc import Iterator
 
 from . import cli
 

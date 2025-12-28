@@ -6,8 +6,10 @@ import os
 import re
 import time
 from collections import OrderedDict
-from collections.abc import Iterable, Iterator, Mapping
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Iterable, Iterator, Mapping
 
 from . import cli
 
