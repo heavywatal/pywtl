@@ -29,7 +29,7 @@ def compress(infile: Path) -> None:
     img = remove_alpha(img)
     print(f"{infile} [{img.size[0]}x{img.size[1]}]")
     outfile = infile.stem + ".tif"
-    img.thumbnail((max_width, max_height), Image.LANCZOS)
+    img.thumbnail((max_width, max_height), Image.Resampling.LANCZOS)
     print(f"\t=> {outfile} [{img.size[0]}x{img.size[1]}]")
     img.save(outfile, compression="tiff_lzw", dpi=(300.0, 300.0))
     # only float values for dpi
