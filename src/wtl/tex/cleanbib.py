@@ -3,6 +3,8 @@
 import argparse
 import re
 import sys
+from contextlib import nullcontext
+from pathlib import Path
 
 
 def rm_comment(string: str) -> str:
@@ -24,16 +26,16 @@ def rename(string: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-o", "--outfile", type=argparse.FileType("w"), default=sys.stdout
-    )
-    parser.add_argument("infile", type=argparse.FileType("r"))
+    parser.add_argument("-o", "--outfile", type=Path)
+    parser.add_argument("infile", type=Path)
     args = parser.parse_args()
-    content = args.infile.read()
+    with args.infile.open("r") if args.infile else nullcontext(sys.stdin) as fin:
+        content = fin.read()
     content = rm_comment(content)
     content = rm_annote(content)
     content = rename(content)
-    args.outfile.write(content)
+    with args.outfile.open("w") as fout:
+        fout.write(content)
 
 
 if __name__ == "__main__":

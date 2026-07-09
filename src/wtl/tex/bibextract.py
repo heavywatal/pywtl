@@ -3,6 +3,7 @@
 import argparse
 import re
 import sys
+from pathlib import Path
 from typing import TYPE_CHECKING, TextIO
 
 if TYPE_CHECKING:
@@ -24,21 +25,22 @@ def bbl_keys(file: TextIO) -> list[str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-o", "--outfile", type=argparse.FileType("w"), default=sys.stdout
-    )
-    parser.add_argument("-b", "--bbl", type=argparse.FileType("r"))
-    parser.add_argument("bib", type=argparse.FileType("r"))
+    parser.add_argument("-o", "--outfile", type=Path)
+    parser.add_argument("-b", "--bbl", type=Path)
+    parser.add_argument("bib", type=Path)
     parser.add_argument("keys", nargs="*")
     args = parser.parse_args()
     keys = args.keys
     if args.bbl:
-        keys.extend(bbl_keys(args.bbl))
+        with args.bbl.open("r") as fin:
+            keys.extend(bbl_keys(fin))
     print(keys, file=sys.stderr)
     print(len(keys), file=sys.stderr)
-    matched = bib_entries(args.bib, keys)
+    with args.bib.open("r") as fin:
+        matched = bib_entries(fin, keys)
     print(len(matched), file=sys.stderr)
-    args.outfile.writelines(matched)
+    with args.outfile.open("w") as fout:
+        fout.writelines(matched)
 
 
 if __name__ == "__main__":

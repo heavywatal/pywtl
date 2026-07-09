@@ -1,5 +1,6 @@
 import argparse
 import re
+from pathlib import Path
 
 abbrevs = [
     "Acad",
@@ -90,15 +91,16 @@ def sub_command(string: str) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("bbl", type=argparse.FileType("r+"))
+    parser.add_argument("bbl", type=Path)
     args = parser.parse_args()
-    content = args.bbl.read()
-    args.bbl.seek(0)
-    content = sub_pagerange(content)
-    content = sub_abbrev(content)
-    content = sub_command(content)
-    args.bbl.write(content)
-    args.bbl.truncate()
+    with args.bbl.open("r+") as bbl_file:
+        content = bbl_file.read()
+        bbl_file.seek(0)
+        content = sub_pagerange(content)
+        content = sub_abbrev(content)
+        content = sub_command(content)
+        bbl_file.write(content)
+        bbl_file.truncate()
 
 
 if __name__ == "__main__":

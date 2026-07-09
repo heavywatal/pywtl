@@ -12,11 +12,12 @@ icons = ["home", "user"]
 ```
 """
 
-import argparse
 import logging
 import re
+import sys
 import tomllib
 import urllib.parse
+from contextlib import nullcontext
 from pathlib import Path
 from typing import TYPE_CHECKING, TypedDict
 
@@ -38,10 +39,10 @@ class IconSet(TypedDict):
 def main() -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("-o", "--outdir", type=Path, default=Path())
-    parser.add_argument("infile", nargs="?", type=argparse.FileType("r"), default="-")
+    parser.add_argument("infile", nargs="?", type=Path)
     args = parser.parse_args()
-    toml = args.infile.read()
-    args.infile.close()
+    with args.infile.open("r") if args.infile else nullcontext(sys.stdin) as fin:
+        toml = fin.read()
     sets: Iterable[IconSet] = tomllib.loads(toml)["sets"]
     _log.info(f"{sets = }")
     make_index_scss(args.outdir, [x["prefix"] for x in sets])

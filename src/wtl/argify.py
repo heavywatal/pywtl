@@ -2,6 +2,9 @@
 
 import argparse
 import json
+import sys
+from contextlib import nullcontext
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -20,9 +23,10 @@ def argify(obj: Mapping[str, str]) -> list[str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("infile", nargs="?", default="-", type=argparse.FileType("r"))
+    parser.add_argument("infile", nargs="?", type=Path)
     args = parser.parse_args()
-    obj = json.load(args.infile)
+    with args.infile.open("r") if args.infile else nullcontext(sys.stdin) as fin:
+        obj = json.load(fin)
     result = argify(obj)
     print(" ".join(result))
 

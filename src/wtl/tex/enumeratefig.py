@@ -3,10 +3,10 @@
 http://journals.plos.org/ploscompbiol/s/figures
 """
 
-import argparse
 import re
 import shutil
 import sys
+from contextlib import nullcontext
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -27,12 +27,11 @@ def main() -> None:
     parser.add_argument("-i", "--indir", default="", type=Path)
     parser.add_argument("-o", "--outdir", default="", type=Path)
     parser.add_argument("-m", "--main", type=int, default=sys.maxsize)
-    parser.add_argument(
-        "infile", nargs="?", default=sys.stdin, type=argparse.FileType("r")
-    )
+    parser.add_argument("infile", nargs="?", type=Path)
     args = parser.parse_args()
 
-    text = args.infile.read()
+    with args.infile.open("r") if args.infile else nullcontext(sys.stdin) as fin:
+        text = fin.read()
     for i, infile in enumerate(finditer(text), 1):
         ext = Path(infile).suffix
         outfile = f"Fig{i}{ext}" if i <= args.main else f"S{i - args.main}_Fig{ext}"

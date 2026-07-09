@@ -2,8 +2,8 @@
 
 import argparse
 import re
-import sys
 from collections import OrderedDict
+from pathlib import Path
 
 
 def collect_citekeys(content: str) -> set[str]:
@@ -24,11 +24,10 @@ def collect_labels(content: str) -> OrderedDict[str, str]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "infile", nargs="?", default=sys.stdin, type=argparse.FileType("r")
-    )
+    parser.add_argument("infile", nargs="?", type=Path)
     args = parser.parse_args()
-    content = args.infile.read()
+    with args.infile.open("r") as fin:
+        content = fin.read()
     citekeys = collect_citekeys(content)
     print(f"{citekeys=}")
     labels = collect_labels(content)

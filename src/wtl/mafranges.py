@@ -1,8 +1,8 @@
 """Convert ranges of MAF to BED."""
 
-import argparse
 import re
 import sys
+from contextlib import nullcontext
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -28,12 +28,11 @@ def readiter(infile: Path) -> Iterator[str]:
 def main() -> None:
     parser = cli.ArgumentParser()
     parser.add_argument("infile", type=Path)
-    parser.add_argument(
-        "outfile", nargs="?", type=argparse.FileType("w"), default=sys.stdout
-    )
+    parser.add_argument("outfile", nargs="?", type=Path)
     args = parser.parse_args()
-    for x in readiter(args.infile):
-        print(x, file=args.outfile)
+    with args.outfile.open("w") if args.outfile else nullcontext(sys.stdout) as fout:
+        for x in readiter(args.infile):
+            print(x, file=fout)
 
 
 if __name__ == "__main__":

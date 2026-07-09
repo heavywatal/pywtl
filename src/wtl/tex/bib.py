@@ -2,7 +2,7 @@
 
 import argparse
 import re
-import sys
+from pathlib import Path
 from typing import TextIO
 
 required_keys = [
@@ -66,18 +66,18 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("-n", "--number", action="store_true")
     parser.add_argument("-k", "--keys", action="store_true")
-    parser.add_argument(
-        "-o", "--outfile", type=argparse.FileType("w"), default=sys.stdout
-    )
-    parser.add_argument("bib", type=argparse.FileType("r"))
+    parser.add_argument("-o", "--outfile", type=Path)
+    parser.add_argument("bib", type=Path)
     args = parser.parse_args()
-    entries = read_entries(args.bib)
+    with args.bib.open("r") as fin:
+        entries = read_entries(fin)
     if args.number:
         print(len(entries))
     elif args.keys:
         print([x.key for x in entries])
     else:
-        args.outfile.writelines([str(x) for x in entries])
+        with args.outfile.open("w") as fout:
+            fout.writelines([str(x) for x in entries])
 
 
 if __name__ == "__main__":
